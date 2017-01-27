@@ -1,7 +1,0 @@
-/.bundle
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
-.byebug_history
-coverage/
