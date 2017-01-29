@@ -1,103 +1,171 @@
-FROM ubuntu:16.04
-
-RUN apt-get update && apt-get install -y \
-  git \
-  make \
-  software-properties-common \
-  wget
+FROM buildpack-deps:jessie
+LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
+      version="0.1.0"
 
 
-# Install C
-RUN apt-get update && apt-get install -y \
-    gcc-4.7 \
-    gcc-4.8 \
-    gcc-4.9 \
-    gcc-5 \
-    gcc
+ENV GCC_VERSIONS \
+       6.3.0 \
+       5.4.0 \
+       4.9.4 \
+       4.8.5
+RUN set -xe && \
+    for GCC_VERSION in $GCC_VERSIONS; do \
+      curl -fSL "http://ftpmirror.gnu.org/gcc/gcc-$GCC_VERSION/gcc-$GCC_VERSION.tar.bz2" -o /tmp/gcc-$GCC_VERSION.tar.bz2 && \
+      mkdir /tmp/gcc-$GCC_VERSION && \
+      tar -xf /tmp/gcc-$GCC_VERSION.tar.bz2 -C /tmp/gcc-$GCC_VERSION --strip-components=1 && \
+      rm /tmp/gcc-$GCC_VERSION.tar.bz2 && \
+      cd /tmp/gcc-$GCC_VERSION && \
+      ./contrib/download_prerequisites && \
+      { rm *.tar.* || true; } && \
+      tmpdir="$(mktemp -d)" && \
+      cd "$tmpdir" && \
+      /tmp/gcc-$GCC_VERSION/configure \
+        --disable-multilib \
+        --enable-languages=c,c++ \
+        --prefix=/usr/local/gcc-$GCC_VERSION && \
+      make -j"$(nproc)" && \
+      make install-strip && \
+      cd /tmp && \
+      rm -rf "$tmpdir" /tmp/gcc-$GCC_VERSION; \
+    done
 
 
-# Install Isolate
-WORKDIR /tmp
-RUN git clone https://github.com/ioi/isolate.git && \
-  cd isolate && \
-  echo "num_boxes = 2147483647" >> default.cf && \
-  make install
 
-ENV BOX_ROOT /var/local/lib/isolate
+ENV BASH_VERSIONS \
+      4.4 \
+      4.3 \
+      4.2 \
+      4.1 \
+      4.0
+RUN set -xe && \
+    for BASH_VERSION in $BASH_VERSIONS; do \
+      curl -fSL "http://ftpmirror.gnu.org/bash/bash-$BASH_VERSION.tar.gz" -o /tmp/bash-$BASH_VERSION.tar.gz && \
+      mkdir /tmp/bash-$BASH_VERSION && \
+      tar -xf /tmp/bash-$BASH_VERSION.tar.gz -C /tmp/bash-$BASH_VERSION --strip-components=1 && \
+      rm /tmp/bash-$BASH_VERSION.tar.gz && \
+      cd /tmp/bash-$BASH_VERSION && \
+      ./configure \
+        --prefix=/usr/local/bash-$BASH_VERSION && \
+      make -j"$(nproc)" && make install && \
+      cd /tmp && \
+      rm -rf /tmp/bash-$BASH_VERSION; \
+    done
 
 
-# Install C++
-RUN apt-get install -y \
-    g++-4.7 \
-    g++-4.8 \
-    g++-4.9 \
-    g++-5 \
-    g++
+
+ENV RUBY_VERSIONS \
+      2.4.0 \
+      2.3.3 \
+      2.2.6 \
+      2.1.9
+RUN set -xe && \
+    for RUBY_VERSION in $RUBY_VERSIONS; do \
+      curl -fSL "https://cache.ruby-lang.org/pub/ruby/ruby-$RUBY_VERSION.tar.bz2" -o /tmp/ruby-$RUBY_VERSION.tar.bz2 && \
+      mkdir /tmp/ruby-$RUBY_VERSION && \
+      tar -xf /tmp/ruby-$RUBY_VERSION.tar.bz2 -C /tmp/ruby-$RUBY_VERSION --strip-components=1 && \
+      rm /tmp/ruby-$RUBY_VERSION.tar.bz2 && \
+      cd /tmp/ruby-$RUBY_VERSION && \
+      ./configure \
+        --disable-install-doc \
+        --prefix=/usr/local/ruby-$RUBY_VERSION && \
+      make -j"$(nproc)" && make install && \
+      cd /tmp && \
+      rm -rf /tmp/ruby-$RUBY_VERSION; \
+    done
 
 
-# Install Java
-RUN echo | add-apt-repository ppa:webupd8team/java && \
+
+ENV PYTHON_VERSIONS \
+      3.6.0 \
+      3.5.3 \
+      2.7.9 \
+      2.6.9
+RUN set -xe && \
+    for PYTHON_VERSION in $PYTHON_VERSIONS; do \
+      curl -fSL "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz" -o /tmp/python-$PYTHON_VERSION.tar.xz && \
+      mkdir /tmp/python-$PYTHON_VERSION && \
+      tar -xf /tmp/python-$PYTHON_VERSION.tar.xz -C /tmp/python-$PYTHON_VERSION --strip-components=1 && \
+      rm /tmp/python-$PYTHON_VERSION.tar.xz && \
+      cd /tmp/python-$PYTHON_VERSION && \
+      ./configure \
+        --prefix=/usr/local/python-$PYTHON_VERSION && \
+      make -j"$(nproc)" && make install && \
+      cd /tmp && \
+      rm -rf /tmp/python-$PYTHON_VERSION; \
+    done
+
+
+
+RUN set -xe && \
+    echo 'deb http://deb.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list && \
     apt-get update && \
-    echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
-    apt-get install -y oracle-java6-installer \
-                       oracle-java7-installer \
-                       oracle-java8-installer
+    apt-get install -y \
+      openjdk-8-jdk \
+      openjdk-7-jdk
 
 
-# Install Ruby
-RUN apt-get install -y \
-  autoconf \
-  bison \
-  build-essential \
-  libssl-dev \
-  libyaml-dev \
-  libreadline6-dev \
-  zlib1g-dev \
-  libncurses5-dev \
-  libffi-dev \
-  libgdbm3 \
-  libgdbm-dev
 
-WORKDIR /tmp
-RUN wget http://gd.tuwien.ac.at/languages/ruby/ruby-1.9-stable.tar.gz && \
-    tar -xzf ruby-1.9-stable.tar.gz && \
-    cd ruby-1.9.3-p448 && \
-    ./configure --prefix /usr/lib/ruby/1.9.3 && \
-    make && \
-    make install
-
-WORKDIR /tmp
-RUN wget https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.5.tar.gz && \
-    tar -xzf ruby-2.2.5.tar.gz && \
-    cd ruby-2.2.5 && \
-    ./configure --prefix /usr/lib/ruby/2.2.5 && \
-    make && \
-    make install
-
-WORKDIR /tmp
-RUN wget http://ftp.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz && \
-    tar -xzf ruby-2.3.1.tar.gz && \
-    cd ruby-2.3.1 && \
-    ./configure --prefix /usr/lib/ruby/2.3.1 && \
-    make && \
-    make install
-
-ENV PATH /usr/lib/ruby/2.3.1/bin:$PATH
+RUN set -xe && \
+    curl -fSL "ftp://ftp.freepascal.org/fpc/dist/3.0.0/x86_64-linux/fpc-3.0.0.x86_64-linux.tar" -o /tmp/fpc-3.0.0.tar && \
+    mkdir /tmp/fpc-3.0.0 && \
+    tar -xf /tmp/fpc-3.0.0.tar -C /tmp/fpc-3.0.0 --strip-components=1 && \
+    rm /tmp/fpc-3.0.0.tar && \
+    cd /tmp/fpc-3.0.0 && \
+    echo "/usr/local/fpc-3.0.0" | sh install.sh && \
+    cd /tmp && \
+    rm -rf /tmp/fpc-3.0.0
 
 
-# Install Python
-RUN apt-get install -y \
-  python \
-  python3
+
+ENV HASKELL_VERSIONS \
+      8.0.2
+RUN set -xe && \
+    apt-get update && apt-get install -y libgmp-dev && \
+    for HASKELL_VERSION in $HASKELL_VERSIONS; do \
+      curl -fSL "http://downloads.haskell.org/~ghc/$HASKELL_VERSION/ghc-$HASKELL_VERSION-x86_64-deb8-linux.tar.xz" -o /tmp/ghc-$HASKELL_VERSION.tar.xz && \
+      mkdir /tmp/ghc-$HASKELL_VERSION && \
+      tar -xf /tmp/ghc-$HASKELL_VERSION.tar.xz -C /tmp/ghc-$HASKELL_VERSION --strip-components=1 && \
+      rm /tmp/ghc-$HASKELL_VERSION.tar.xz && \
+      cd /tmp/ghc-$HASKELL_VERSION && \
+      ./configure \
+        --prefix=/usr/local/ghc-$HASKELL_VERSION && \
+      make install && \
+      cd /tmp && \
+      rm -rf /tmp/ghc-$HASKELL_VERSION; \
+    done
 
 
-# Install Pascal
-RUN apt-get install -y \
-  fp-compiler-3.0.0
+
+ENV MONO_VERSIONS \
+      4.8.0.472
+RUN set -xe && \
+    apt-get update && apt-get install -y cmake && \
+    for MONO_VERSION in $MONO_VERSIONS; do \
+      curl -fSL "https://download.mono-project.com/sources/mono/mono-$MONO_VERSION.tar.bz2" -o /tmp/mono-$MONO_VERSION.tar.bz2 && \
+      mkdir /tmp/mono-$MONO_VERSION && \
+      tar -xf /tmp/mono-$MONO_VERSION.tar.bz2 -C /tmp/mono-$MONO_VERSION --strip-components=1 && \
+      rm /tmp/mono-$MONO_VERSION.tar.bz2 && \
+      cd /tmp/mono-$MONO_VERSION && \
+      ./configure \
+        --prefix=/usr/local/mono-$MONO_VERSION && \
+      make && make install && \
+      cd /tmp && \
+      rm -rf /tmp/mono-$MONO_VERSION; \
+    done
 
 
-# ADD HERE MORE COMPILERS ...
 
-RUN cd /tmp && rm -rf *
-WORKDIR /root
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y octave
+
+
+
+RUN set -xe && \
+    git clone https://github.com/ioi/isolate.git /tmp/isolate && \
+    cd /tmp/isolate && \
+    echo "num_boxes = 2147483647" >> default.cf && \
+    make install && \
+    cd /tmp && \
+    rm -rf /tmp/isolate
+ENV BOX_ROOT /var/local/lib/isolate
