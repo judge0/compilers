@@ -155,9 +155,22 @@ RUN set -xe && \
 
 
 
+ENV OCTAVE_VERSIONS \
+      4.2.0
 RUN set -xe && \
-    apt-get update && \
-    apt-get install -y octave
+    apt-get update && apt-get install -y gfortran libblas-dev liblapack-dev libpcre3-dev && \
+    for OCTAVE_VERSION in $OCTAVE_VERSIONS; do \
+      curl -fSL "https://ftp.gnu.org/gnu/octave/octave-$OCTAVE_VERSION.tar.gz" -o /tmp/octave-$OCTAVE_VERSION.tar.gz && \
+      mkdir /tmp/octave-$OCTAVE_VERSION && \
+      tar -xf /tmp/octave-$OCTAVE_VERSION.tar.gz -C /tmp/octave-$OCTAVE_VERSION --strip-components=1 && \
+      rm /tmp/octave-$OCTAVE_VERSION.tar.gz && \
+      cd /tmp/octave-$OCTAVE_VERSION && \
+      ./configure \
+      --prefix=/usr/local/octave-$OCTAVE_VERSION && \
+      make && make install && \
+      cd /tmp && \
+      rm -rf /tmp/octave-$OCTAVE_VERSION; \
+    done
 
 
 
