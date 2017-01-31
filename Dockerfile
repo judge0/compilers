@@ -33,9 +33,6 @@ RUN set -xe && \
 
 ENV BASH_VERSIONS \
       4.4 \
-      4.3 \
-      4.2 \
-      4.1 \
       4.0
 RUN set -xe && \
     for BASH_VERSION in $BASH_VERSIONS; do \
