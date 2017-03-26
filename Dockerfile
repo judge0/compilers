@@ -48,6 +48,8 @@ RUN set -xe && \
       rm -rf /tmp/bash-$BASH_VERSION; \
     done
 
+
+
 ENV RUBY_VERSIONS \
       2.4.0 \
       2.3.3 \
@@ -67,6 +69,8 @@ RUN set -xe && \
       cd /tmp && \
       rm -rf /tmp/ruby-$RUBY_VERSION; \
     done
+
+
 
 ENV PYTHON_VERSIONS \
       3.6.0 \
