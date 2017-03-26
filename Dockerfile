@@ -48,8 +48,6 @@ RUN set -xe && \
       rm -rf /tmp/bash-$BASH_VERSION; \
     done
 
-
-
 ENV RUBY_VERSIONS \
       2.4.0 \
       2.3.3 \
@@ -70,8 +68,6 @@ RUN set -xe && \
       rm -rf /tmp/ruby-$RUBY_VERSION; \
     done
 
-
-
 ENV PYTHON_VERSIONS \
       3.6.0 \
       3.5.3 \
@@ -91,6 +87,10 @@ RUN set -xe && \
       rm -rf /tmp/python-$PYTHON_VERSION; \
     done
 
+RUN set -xe && \ 
+    apt-get update && \
+    curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get install -y nodejs
 
 
 RUN set -xe && \
