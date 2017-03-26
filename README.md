@@ -37,7 +37,8 @@ Here is a list of installed compilers and interpreters:
 |18|ghc|8.0.2|http://downloads.haskell.org/~ghc/8.0.2/docs/html/|http://downloads.haskell.org/~ghc/8.0.2/ghc-8.0.2-x86_64-deb8-linux.tar.xz|
 |19|mono|4.8.0.472|http://www.mono-project.com/docs/|https://download.mono-project.com/sources/mono/mono-4.8.0.472.tar.bz2|
 |20|octave|4.2.0|https://www.gnu.org/software/octave/doc/interpreter/|https://ftp.gnu.org/gnu/octave/octave-4.2.0.tar.gz|
-|21|nodejs|6|https://nodejs.org/docs/v6.10.1/api/|https://nodejs.org/dist/v6.10.1/node-v6.10.1-linux-x64.tar.xz|
+|21|nodejs|4.8.1|https://nodejs.org/docs/v4.8.1/api/|https://nodejs.org/dist/v4.8.1/node-v4.8.1.tar.gz|
+|22|nodejs|6.10.1|https://nodejs.org/docs/v6.10.1/api/|https://nodejs.org/dist/v6.10.1/node-v6.10.1.tar.gz|
 
 ## Sandbox Environment
 Sandbox environment is also included in this image. For sandbox environment we are using [isolate](https://github.com/ioi/isolate) (licensed under [GPL v2](https://github.com/ioi/isolate/blob/master/LICENSE)).
