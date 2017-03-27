@@ -91,22 +91,6 @@ RUN set -xe && \
       rm -rf /tmp/python-$PYTHON_VERSION; \
     done
 
-ENV NODE_VERSIONS \
-      6.10.1 \
-      4.8.1
-RUN set -xe && \
-    for NODE_VERSION in $NODE_VERSIONS; do \
-      curl -fSL "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz" -o /tmp/node-$NODE_VERSION.tar.gz && \
-      mkdir /tmp/node-$NODE_VERSION && \
-      tar -xf /tmp/node-$NODE_VERSION.tar.gz -C /tmp/node-$NODE_VERSION --strip-components=1 && \
-      rm /tmp/node-$NODE_VERSION.tar.gz && \
-      cd /tmp/node-$NODE_VERSION && \
-      ./configure \
-        --prefix=/usr/local/node-$NODE_VERSION && \
-      make -j"$(nproc)" && make install && \
-      cd /tmp && \
-      rm -rf /tmp/node-$NODE_VERSION; \
-    done
 
 
 RUN set -xe && \
@@ -183,6 +167,25 @@ RUN set -xe && \
       make && make install && \
       cd /tmp && \
       rm -rf /tmp/octave-$OCTAVE_VERSION; \
+    done
+
+
+
+ENV NODE_VERSIONS \
+      6.10.1 \
+      4.8.1
+RUN set -xe && \
+    for NODE_VERSION in $NODE_VERSIONS; do \
+      curl -fSL "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz" -o /tmp/node-$NODE_VERSION.tar.gz && \
+      mkdir /tmp/node-$NODE_VERSION && \
+      tar -xf /tmp/node-$NODE_VERSION.tar.gz -C /tmp/node-$NODE_VERSION --strip-components=1 && \
+      rm /tmp/node-$NODE_VERSION.tar.gz && \
+      cd /tmp/node-$NODE_VERSION && \
+      ./configure \
+        --prefix=/usr/local/node-$NODE_VERSION && \
+      make -j"$(nproc)" && make install && \
+      cd /tmp && \
+      rm -rf /tmp/node-$NODE_VERSION; \
     done
 
 
