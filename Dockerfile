@@ -1,6 +1,6 @@
 FROM buildpack-deps:jessie
-LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-      version="0.1.0"
+#LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
+#      version="0.1.1"
 
 
 ENV GCC_VERSIONS \
@@ -198,3 +198,8 @@ RUN set -xe && \
     cd /tmp && \
     rm -rf /tmp/isolate
 ENV BOX_ROOT /var/local/lib/isolate
+
+
+
+LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
+      version="0.1.1"
