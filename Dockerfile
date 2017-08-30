@@ -1,6 +1,6 @@
 FROM buildpack-deps:jessie
 #LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-#      version="0.1.1"
+#      version="0.1.2"
 
 
 RUN apt-get update && apt-get upgrade -y
@@ -210,4 +210,4 @@ ENV BOX_ROOT /var/local/lib/isolate
 
 
 LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-      version="0.1.1"
+      version="0.1.2"
