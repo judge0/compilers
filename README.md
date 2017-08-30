@@ -63,9 +63,9 @@ Take a look at [Docker Hub](https://hub.docker.com/r/judge0/api-base/tags/). The
 
 `latest` tag will always be equal to highest version tag. Dockerfiles for all versions will be available in [tags](https://github.com/judge0/api-base/tags) or [releases](https://github.com/judge0/api-base/releases) pages of GitHub.
 
-To pull version `0.1.1`:
+To pull version `0.1.2`:
 
-1. `docker pull judge0/api-base:0.1.1`
+1. `docker pull judge0/api-base:0.1.2`
 2. Grab some coffee, this **might** take a while.
 
 ## Adding New Compiler or Interpreter

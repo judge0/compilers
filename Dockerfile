@@ -1,7 +1,9 @@
 FROM buildpack-deps:jessie
 #LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-#      version="0.1.1"
+#      version="0.1.2"
 
+
+RUN apt-get update && apt-get upgrade -y
 
 ENV GCC_VERSIONS \
        6.3.0 \
@@ -96,14 +98,14 @@ RUN set -xe && \
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
 RUN set -xe && \
+    JAVA_8_DEBIAN_VERSION=8u131-b11-1~bpo8+1 && \
+    JAVA_7_DEBIAN_VERSION=7u151-2.6.11-1~deb8u1 && \
     CA_CERTIFICATES_JAVA_VERSION=20161107~bpo8+1 && \
-    JAVA_DEBIAN_VERSION=8u121-b13-1~bpo8+1 && \
     echo 'deb http://deb.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list && \
-    apt-get update && \
-    apt-get install -y \
-      openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
-      ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
-      openjdk-7-jdk
+    apt-get update && apt-get install -y \
+      openjdk-8-jdk="$JAVA_8_DEBIAN_VERSION" \
+      openjdk-7-jdk="$JAVA_7_DEBIAN_VERSION" \
+      ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION"
 
 
 
@@ -196,6 +198,7 @@ RUN set -xe && \
 
 
 RUN set -xe && \
+    apt-get update && apt-get install -y libcap-dev && \
     git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
     echo "num_boxes = 2147483647" >> default.cf && \
@@ -207,4 +210,4 @@ ENV BOX_ROOT /var/local/lib/isolate
 
 
 LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-      version="0.1.1"
+      version="0.1.2"
