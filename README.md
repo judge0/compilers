@@ -6,7 +6,7 @@
 **Judge0 API Base** is an base API Docker image with installed compilers, interpreters and sandbox environment - [isolate](https://github.com/ioi/isolate).
 
 ## Compilers and Interpreters
-Each compiler and interpreter is compiled during image build, or if precompiled binary was available for x86_64 architecture then this binary was used.
+Each compiler and interpreter is compiled during image build, or if precompiled binary was available for x86_64 architecture then this binary is used.
 
 We used this approach of compiling each compiler and interpreter instead of installing available packages because we have full control of choosing where this compiler and interpreter will be installed. That also gives us ability to install some compilers and interpreters that are not available with package manager.
 
@@ -68,7 +68,7 @@ Sandbox environment is also included in this image. For sandbox environment we a
 
 Huge thanks to [Martin Mareš](https://github.com/gollux) and [Bernard Blackham](https://github.com/bblackham) for developing and maintaining this project. Also, thanks to all other people who contributed to isolate project.
 
-*Isolate* was used as sandbox environment (part of [CMS](https://github.com/cms-dev/cms) system) on big programming contests like [International Olympiad in Informatics](http://www.ioinformatics.org/index.shtml) (a.k.a. IOI) in 2012, and we trust that this sandbox environment works and does its job.
+Isolate was used as sandbox environment (part of [CMS](https://github.com/cms-dev/cms) system) on big programming contests like [International Olympiad in Informatics](http://www.ioinformatics.org/index.shtml) (a.k.a. IOI) in 2012, and we trust that this sandbox environment works and does its job.
 
 ## Building Docker Image
 If you want to build your own Judge0 API Base image:
@@ -79,7 +79,6 @@ If you want to build your own Judge0 API Base image:
 4. Grab some coffee, this **will** take some time.
 
 ## Pulling Docker Image
-
 Take a look at [Docker Hub](https://hub.docker.com/r/judge0/api-base/tags/). There are version tags and `latest` tag.
 
 `latest` tag will always be equal to highest version tag. Dockerfiles for all versions will be available in [tags](https://github.com/judge0/api-base/tags) or [releases](https://github.com/judge0/api-base/releases) pages of GitHub.
@@ -90,7 +89,6 @@ To pull version `0.2.0`:
 2. Grab some coffee, this **might** take a while.
 
 ## Adding New Compiler or Interpreter
-
 Adding new compiler or interpreter is easy as long as you know how to compile it properly or as long as you know what precompiled binary you need to download.
 
 You should add installation of your favorite compiler between installation of last compiler and isolate installation. Installation of isolate should always be the last, because it is then easier to rebuild image when new version of isolate is available.
