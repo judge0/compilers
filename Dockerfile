@@ -131,7 +131,14 @@ RUN set -xe && \
     apt-get update && apt-get install -y \
       openjdk-8-jdk="$JAVA_8_DEBIAN_VERSION" \
       openjdk-7-jdk="$JAVA_7_DEBIAN_VERSION" \
-      ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION"
+      ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" && \
+    update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java && \
+    update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac
+RUN set -xe && \
+    curl -fSsL "https://github.com/AdoptOpenJDK/openjdk9-openj9-releases/releases/download/jdk-9%2B181/OpenJDK9-OPENJ9_x64_Linux_jdk-9.181.tar.gz" -o /tmp/openjdk9-openj9.tar.gz && \
+    mkdir /usr/local/openjdk9-openj9 && \
+    tar -xf /tmp/openjdk9-openj9.tar.gz -C /usr/local/openjdk9-openj9 --strip-components=2 && \
+    rm /tmp/openjdk9-openj9.tar.gz
 
 
 
@@ -168,7 +175,7 @@ RUN set -xe && \
 
 
 ENV MONO_VERSIONS \
-      5.4.0.167 \ 
+      5.4.0.167 \
       5.2.0.224
 RUN set -xe && \
     apt-get update && apt-get install -y cmake && \
@@ -217,6 +224,7 @@ RUN set -xe && \
     done; \
     for CLOJURE_VERSION in $CLOJURE_VERSIONS; do \
       unzip -d /usr/local /tmp/clojure-$CLOJURE_VERSION.zip && \
+      chmod -R 755 /usr/local/clojure-$CLOJURE_VERSION && \
       rm /tmp/clojure-$CLOJURE_VERSION.zip; \
     done
 
@@ -241,7 +249,7 @@ RUN set -xe && \
       rm -rf /tmp/erlang-$ERLANG_VERSION; \
     done
 # set default Erlang version for Elixir
-ENV PATH "/usr/local/erlang-20.0/bin/:$PATH"
+RUN ln -s /usr/local/erlang-20.0/bin/erl /usr/local/bin/erl
 
 
 
@@ -299,7 +307,9 @@ RUN set -xe && \
     for INSECT_VERSION in $INSECT_VERSIONS; do \
       mkdir /usr/local/insect-$INSECT_VERSION && \
       cd /usr/local/insect-$INSECT_VERSION && \
-      npm install insect@$INSECT_VERSION; \
+      npm install insect@$INSECT_VERSION && \
+      echo "#!/bin/bash\ncat \"\$1\" | /usr/local/insect-$INSECT_VERSION/node_modules/.bin/insect" > /usr/local/insect-$INSECT_VERSION/insect && \
+      chmod +x /usr/local/insect-$INSECT_VERSION/insect; \
     done
 
 
@@ -318,25 +328,17 @@ RUN set -xe && \
 
 
 
-ENV BASIC_VERSIONS \
+ENV FBC_VERSIONS \
       1.05.0 
 RUN set -xe && \
-    for BASIC_VERSION in $BASIC_VERSIONS; do \
-      curl -fSsL "https://downloads.sourceforge.net/project/fbc/Binaries%20-%20Linux/FreeBASIC-$BASIC_VERSION-linux-x86_64.tar.gz" -o /tmp/basic-$BASIC_VERSION.tar.gz; \
+    for FBC_VERSION in $FBC_VERSIONS; do \
+      curl -fSsL "https://downloads.sourceforge.net/project/fbc/Binaries%20-%20Linux/FreeBASIC-$FBC_VERSION-linux-x86_64.tar.gz" -o /tmp/fbc-$FBC_VERSION.tar.gz; \
     done; \
-    for BASIC_VERSION in $BASIC_VERSIONS; do \
-      mkdir /usr/local/basic-$BASIC_VERSION && \
-      tar -xf /tmp/basic-$BASIC_VERSION.tar.gz -C /usr/local/basic-$BASIC_VERSION --strip-components=1 && \
-      rm /tmp/basic-$BASIC_VERSION.tar.gz; \
+    for FBC_VERSION in $FBC_VERSIONS; do \
+      mkdir /usr/local/fbc-$FBC_VERSION && \
+      tar -xf /tmp/fbc-$FBC_VERSION.tar.gz -C /usr/local/fbc-$FBC_VERSION --strip-components=1 && \
+      rm /tmp/fbc-$FBC_VERSION.tar.gz; \
     done
-
-
-
-RUN set -xe && \
-    curl -fSsL "https://github.com/AdoptOpenJDK/openjdk9-openj9-releases/releases/download/jdk-9%2B181/OpenJDK9-OPENJ9_x64_Linux_jdk-9.181.tar.gz" -o /tmp/openjdk9-openj9.tar.gz && \
-    mkdir /usr/local/openjdk9-openj9 && \
-    tar -xf /tmp/openjdk9-openj9.tar.gz -C /usr/local/openjdk9-openj9 --strip-components=2 && \
-    rm /tmp/openjdk9-openj9.tar.gz
 
 
 
