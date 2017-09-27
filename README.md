@@ -1,5 +1,6 @@
 # Judge0 API Base
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/judge0/api-base/blob/master/LICENSE)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/hermanzdosilovic)
 
 ## About
 **Judge0 API Base** is an base API Docker image with installed compilers, interpreters and sandbox environment - [isolate](https://github.com/ioi/isolate).
@@ -97,3 +98,6 @@ You should add installation of your favorite compiler between installation of la
 You should also install your favorite compiler inside `/usr/local/` folder. For example `gcc v6.3.0` is installed inside `/usr/local/gcc-6.3.0` folder.
 
 Please note that when you add new compiler or interpreter there is still some work that needs to be done for it to be usable on [**Judge0 API**](https://api.judge0.com), but adding it to Judge0 API Base image is the first step. After that read documentation of [Judge0 API](https://github.com/judge0/api) for the next steps.
+
+## Donate
+If you like Judge0, please consider making a [donation](https://www.paypal.me/hermanzdosilovic) to support this project.
