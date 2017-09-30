@@ -1,6 +1,6 @@
 FROM buildpack-deps:jessie
 #LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-#      version="0.2.0"
+#      version="0.2.1"
 
 
 RUN apt-get update && apt-get upgrade -y
@@ -342,6 +342,26 @@ RUN set -xe && \
 
 
 
+ENV OCAML_VERSIONS \
+      4.05.0
+RUN set -xe && \
+    for OCAML_VERSION in $OCAML_VERSIONS; do \
+      curl -fSsL "https://github.com/ocaml/ocaml/archive/$OCAML_VERSION.tar.gz" -o /tmp/ocaml-$OCAML_VERSION.tar.gz; \
+    done; \
+    for OCAML_VERSION in $OCAML_VERSIONS; do \
+      mkdir /tmp/ocaml-$OCAML_VERSION && \
+      tar -xf /tmp/ocaml-$OCAML_VERSION.tar.gz -C /tmp/ocaml-$OCAML_VERSION --strip-components=1 && \
+      rm /tmp/ocaml-$OCAML_VERSION.tar.gz && \
+      cd /tmp/ocaml-$OCAML_VERSION && \
+      ./configure \
+        -prefix /usr/local/ocaml-$OCAML_VERSION \
+        -no-ocamldoc -no-debugger -no-graph && \
+      make -j"$(nproc)" world.opt && make install && \
+      rm -rf /tmp/ocaml-$OCAML_VERSION; \
+    done
+
+
+
 RUN set -xe && \
     apt-get update && apt-get install -y locales && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
@@ -361,4 +381,4 @@ ENV BOX_ROOT /var/local/lib/isolate
 
 
 LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-      version="0.2.0"
+      version="0.2.1"

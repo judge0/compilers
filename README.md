@@ -10,7 +10,7 @@ Each compiler and interpreter is compiled during image build, or if precompiled 
 
 We used this approach of compiling each compiler and interpreter instead of installing available packages because we have full control of choosing where this compiler and interpreter will be installed. That also gives us ability to install some compilers and interpreters that are not available with package manager.
 
-As a consequence, Judge0 API Base image is large (8.61 GB uncompressed) and build time takes few hours, but we successfully installed more than 40 different compilers and interpreters and more of them can be added easily.
+As a consequence, Judge0 API Base image is large (8.82 GB uncompressed) and build time takes few hours, but we successfully installed more than 40 different compilers and interpreters and more of them can be added easily.
 
 We are open to any suggestions on how to reduce size of this image but retain flexibility of adding/removing new compilers and interpreters.
 
@@ -48,18 +48,19 @@ Here is a list of supported languages:
 |28|Java (OpenJDK 7)|
 |29|JavaScript (nodejs 8.5.0)|
 |30|JavaScript (nodejs 7.10.1)|
-|31|Octave (4.2.0)|
-|32|Pascal (fpc 3.0.0)|
-|33|Python (3.6.0)|
-|34|Python (3.5.3)|
-|35|Python (2.7.9)|
-|36|Python (2.6.9)|
-|37|Ruby (2.4.0)|
-|38|Ruby (2.3.3)|
-|39|Ruby (2.2.6)|
-|40|Ruby (2.1.9)|
-|41|Rust (1.20.0)|
-|42|Text (plain text)|
+|31|OCaml (4.05.0)|
+|32|Octave (4.2.0)|
+|33|Pascal (fpc 3.0.0)|
+|34|Python (3.6.0)|
+|35|Python (3.5.3)|
+|36|Python (2.7.9)|
+|37|Python (2.6.9)|
+|38|Ruby (2.4.0)|
+|39|Ruby (2.3.3)|
+|40|Ruby (2.2.6)|
+|41|Ruby (2.1.9)|
+|42|Rust (1.20.0)|
+|43|Text (plain text)|
 
 ## Sandbox Environment
 Sandbox environment is also included in this image. For sandbox environment we are using [isolate](https://github.com/ioi/isolate) (licensed under [GPL v2](https://github.com/ioi/isolate/blob/master/LICENSE)).
@@ -83,9 +84,9 @@ Take a look at [Docker Hub](https://hub.docker.com/r/judge0/api-base/tags/). The
 
 `latest` tag will always be equal to highest version tag. Dockerfiles for all versions will be available in [tags](https://github.com/judge0/api-base/tags) or [releases](https://github.com/judge0/api-base/releases) pages of GitHub.
 
-To pull version `0.2.0`:
+To pull version `0.2.1`:
 
-1. `docker pull judge0/api-base:0.2.0`
+1. `docker pull judge0/api-base:0.2.1`
 2. Grab some coffee, this **might** take a while.
 
 ## Adding New Compiler or Interpreter
