@@ -1,7 +1,4 @@
-FROM buildpack-deps:jessie
-#LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-#      version="0.2.1"
-
+FROM judge0/buildpack-deps:jessie-2017-03-21
 
 RUN apt-get update && apt-get upgrade -y
 
@@ -373,6 +370,7 @@ RUN set -xe && \
     apt-get update && apt-get install -y libcap-dev && \
     git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
+    git checkout 18554e83793508acd1032d0cf4229a332c43085e && \
     echo "num_boxes = 2147483647" >> default.cf && \
     make install && \
     rm -rf /tmp/isolate
@@ -380,5 +378,5 @@ ENV BOX_ROOT /var/local/lib/isolate
 
 
 
-LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com" \
-      version="0.2.1"
+LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com"
+LABEL version="0.3.0"
