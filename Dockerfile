@@ -17,23 +17,10 @@ RUN set -xe && \
       rm -rf /tmp/ruby-$RUBY_VERSION; \
     done
 
-# First version checkouts to v0.1.3 because of an error made in Makefile: https://github.com/vlang/v/issues/616.
-ENV V_VERSIONS \
-      b00a47be
-RUN set -xe && \
-    for V_VERSION in $V_VERSIONS; do \
-      git clone https://github.com/vlang/v /usr/local/v-$V_VERSION && \
-      cd /usr/local/v-$V_VERSION/compiler && \
-      git checkout $V_VERSION && \
-      make -j$(nproc); \
-    done
-
 RUN set -xe && \
     apt-get update && apt-get install -y locales && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
-
-
  
 RUN set -xe && \
     apt-get update && apt-get install -y libcap-dev && \
@@ -45,7 +32,34 @@ RUN set -xe && \
     rm -rf /tmp/isolate
 ENV BOX_ROOT /var/local/lib/isolate
 
-
+ENV V_VERSIONS \
+      v0.1.3 \
+      v0.1.4 \
+      v0.1.5 \
+      v0.1.6 \
+      v0.1.7 \
+      v0.1.8
+RUN set -xe && \
+    for V_VERSION in $V_VERSIONS; do \
+      git clone --branch $V_VERSION https://github.com/vlang/v /usr/local/v-$V_VERSION && \
+      cd /usr/local/v-$V_VERSION; \
+      if [ "$V_VERSION" = "v0.1.8" ]; then \
+        git checkout 4aab26d3; \
+      fi; \
+      curl -fSsL "https://github.com/vlang/v/releases/download/$V_VERSION/v_linux.zip" -o v_linux.zip && \
+      unzip v_linux.zip -d compiler && \
+      rm v_linux.zip && \
+      mkdir .vlang && \
+      chmod -R 777 .vlang && \
+      echo $PWD > .vlang/VROOT; \
+      if [ "$V_VERSION" = "v0.1.6" ]; then \
+        FAKE_HOME=/usr/local/v-v0.1.7; \
+      else \
+        FAKE_HOME=$PWD; \
+      fi; \
+      echo "#!/bin/bash\nHOME=$FAKE_HOME $PWD/compiler/v \$@" >> v && \
+      chmod +x v; \
+    done
 
 LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com"
-LABEL version="vlang0.1.3"
+LABEL version="vlang0.1.8"
