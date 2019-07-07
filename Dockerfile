@@ -21,7 +21,7 @@ RUN set -xe && \
     apt-get update && apt-get install -y locales && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
- 
+
 RUN set -xe && \
     apt-get update && apt-get install -y libcap-dev && \
     git clone https://github.com/ioi/isolate.git /tmp/isolate && \
@@ -61,5 +61,24 @@ RUN set -xe && \
       chmod +x v; \
     done
 
+ENV V_VERSIONS \
+      v0.1.9 \
+      v0.1.10 \
+      v0.1.11 \
+      v0.1.12
+RUN set -xe && \
+    for V_VERSION in $V_VERSIONS; do \
+      mkdir -p /usr/local/v-$V_VERSION && \
+      cd /usr/local/v-$V_VERSION && \
+      curl -fSsL "https://github.com/vlang/v/releases/download/$V_VERSION/v.zip" -o v.zip && \
+      unzip v.zip && \
+      rm v.zip && \
+      mkdir .vlang && \
+      chmod -R 777 .vlang && \
+      echo $PWD > .vlang/VROOT && \
+      echo "#!/bin/bash\nHOME=$PWD $PWD/v_linux \$@" >> v && \
+      chmod +x v; \
+    done
+
 LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com"
-LABEL version="vlang0.1.8"
+LABEL version="vlang0.1.12"
