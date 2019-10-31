@@ -32,53 +32,15 @@ RUN set -xe && \
     rm -rf /tmp/isolate
 ENV BOX_ROOT /var/local/lib/isolate
 
-ENV V_VERSIONS \
-      v0.1.3 \
-      v0.1.4 \
-      v0.1.5 \
-      v0.1.6 \
-      v0.1.7 \
-      v0.1.8
 RUN set -xe && \
-    for V_VERSION in $V_VERSIONS; do \
-      git clone --branch $V_VERSION https://github.com/vlang/v /usr/local/v-$V_VERSION && \
-      cd /usr/local/v-$V_VERSION; \
-      if [ "$V_VERSION" = "v0.1.8" ]; then \
-        git checkout 4aab26d3; \
-      fi; \
-      curl -fSsL "https://github.com/vlang/v/releases/download/$V_VERSION/v_linux.zip" -o v_linux.zip && \
-      unzip v_linux.zip -d compiler && \
-      rm v_linux.zip && \
-      mkdir .vlang && \
-      chmod -R 777 .vlang && \
-      echo $PWD > .vlang/VROOT; \
-      if [ "$V_VERSION" = "v0.1.6" ]; then \
-        FAKE_HOME=/usr/local/v-v0.1.7; \
-      else \
-        FAKE_HOME=$PWD; \
-      fi; \
-      echo "#!/bin/bash\nHOME=$FAKE_HOME $PWD/compiler/v \$@" >> v && \
-      chmod +x v; \
-    done
-
-ENV V_VERSIONS \
-      v0.1.9 \
-      v0.1.10 \
-      v0.1.11 \
-      v0.1.12
-RUN set -xe && \
-    for V_VERSION in $V_VERSIONS; do \
-      mkdir -p /usr/local/v-$V_VERSION && \
-      cd /usr/local/v-$V_VERSION && \
-      curl -fSsL "https://github.com/vlang/v/releases/download/$V_VERSION/v.zip" -o v.zip && \
-      unzip v.zip && \
-      rm v.zip && \
-      mkdir .vlang && \
-      chmod -R 777 .vlang && \
-      echo $PWD > .vlang/VROOT && \
-      echo "#!/bin/bash\nHOME=$PWD $PWD/v_linux \$@" >> v && \
-      chmod +x v; \
-    done
+    apt-get update && \
+    apt-get install -y --no-install-recommends git cron && \
+    cd /usr/local && \
+    git clone https://github.com/vlang/v && \
+    cd v && \
+    make && \
+    echo "0 * * * * /usr/local/v/v up > /var/log/cron.log 2>&1" | crontab - && \
+    rm -rf /var/lib/apt/lists/*
 
 LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com"
-LABEL version="vlang0.1.12"
+LABEL version="vlang-latest"
