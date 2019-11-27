@@ -117,14 +117,14 @@ RUN set -xe && \
     done
 
 
-
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
 RUN set -xe && \
-    JAVA_8_DEBIAN_VERSION=8u131-b11-1~bpo8+1 && \
-    JAVA_7_DEBIAN_VERSION=7u151-2.6.11-1~deb8u1 && \
+    JAVA_8_DEBIAN_VERSION=8u171-b11-1~bpo8+1 && \
+    JAVA_7_DEBIAN_VERSION=7u231-2.6.19-1~deb8u2 && \
     CA_CERTIFICATES_JAVA_VERSION=20161107~bpo8+1 && \
-    echo 'deb http://deb.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list && \
+    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf && \
+    echo 'deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list && \
     apt-get update && apt-get install -y \
       openjdk-8-jdk="$JAVA_8_DEBIAN_VERSION" \
       openjdk-7-jdk="$JAVA_7_DEBIAN_VERSION" \
@@ -132,7 +132,7 @@ RUN set -xe && \
     update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java && \
     update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac
 RUN set -xe && \
-    curl -fSsL "https://github.com/AdoptOpenJDK/openjdk9-openj9-releases/releases/download/jdk-9%2B181/OpenJDK9-OPENJ9_x64_Linux_jdk-9.181.tar.gz" -o /tmp/openjdk9-openj9.tar.gz && \
+    curl -fSsL "https://github.com/AdoptOpenJDK/openjdk9-binaries/releases/download/jdk-9%2B181/OpenJDK9U-jdk_x64_linux_hotspot_9_181.tar.gz" -o /tmp/openjdk9-openj9.tar.gz && \
     mkdir /usr/local/openjdk9-openj9 && \
     tar -xf /tmp/openjdk9-openj9.tar.gz -C /usr/local/openjdk9-openj9 --strip-components=2 && \
     rm /tmp/openjdk9-openj9.tar.gz
@@ -326,7 +326,7 @@ RUN set -xe && \
 
 
 ENV FBC_VERSIONS \
-      1.05.0 
+      1.07.1
 RUN set -xe && \
     for FBC_VERSION in $FBC_VERSIONS; do \
       curl -fSsL "https://downloads.sourceforge.net/project/fbc/Binaries%20-%20Linux/FreeBASIC-$FBC_VERSION-linux-x86_64.tar.gz" -o /tmp/fbc-$FBC_VERSION.tar.gz; \
@@ -365,7 +365,7 @@ RUN set -xe && \
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 
- 
+
 RUN set -xe && \
     apt-get update && apt-get install -y libcap-dev && \
     git clone https://github.com/ioi/isolate.git /tmp/isolate && \
