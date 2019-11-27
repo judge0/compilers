@@ -357,7 +357,23 @@ RUN set -xe && \
       rm -rf /tmp/ocaml-$OCAML_VERSION; \
     done
 
-
+ENV PHP_VERSIONS \
+      7.3.12
+RUN set -xe && \
+  for PHP_VERSION in $PHP_VERSIONS; do \
+    curl -fSsL https://www.php.net/distributions/php-$PHP_VERSION.tar.gz -o /tmp/php-$PHP_VERSION.tar.gz; \
+  done; \
+  for PHP_VERSION in $PHP_VERSIONS; do \
+    mkdir /tmp/php-$PHP_VERSION && \
+    tar -xf /tmp/php-$PHP_VERSION.tar.gz -C /tmp/php-$PHP_VERSION --strip-components=1 && \
+    rm /tmp/php-$PHP_VERSION.tar.gz && \
+    cd /tmp/php-$PHP_VERSION && \
+    ./configure \
+    --prefix=/usr/local/php-$PHP_VERSION \
+    --enable-phpdbg=no --enable-debug=no && \
+    make -j"$(nproc)" && make install && \
+    rm -rf /tmp/php-$PHP_VERSION; \
+  done
 
 RUN set -xe && \
     apt-get update && apt-get install -y locales && \
