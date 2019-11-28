@@ -16,51 +16,51 @@ We are open to any suggestions on how to reduce size of this image but retain fl
 
 Here is a list of supported languages:
 
-|#|Name|
-|:---:|:---:|
-|1 |Bash (4.4)|
-|2 |Bash (4.0)|
-|3 |Basic (fbc 1.05.0) |
-|4 |C (gcc 7.2.0)|
-|5 |C (gcc 6.4.0)|
-|6 |C (gcc 6.3.0)|
-|7 |C (gcc 5.4.0)|
-|8 |C (gcc 4.9.4)|
-|9 |C (gcc 4.8.5)|
-|10|C++ (g++ 7.2.0)|
-|11|C++ (g++ 6.4.0)|
-|12|C++ (g++ 6.3.0)|
-|13|C++ (g++ 5.4.0)|
-|14|C++ (g++ 4.9.4)|
-|15|C++ (g++ 4.8.5)|
-|16|C# (mono 5.4.0.167)|
-|17|C# (mono 5.2.0.224)|
-|18|Clojure (1.8.0)|
-|19|Crystal (0.23.1)|
-|20|Elixir (1.5.1)|
-|21|Erlang (OTP 20.0)|
-|22|Go (1.9)|
-|23|Haskell (ghc 8.2.1)|
-|24|Haskell (ghc 8.0.2)|
-|25|Insect (5.0.0)|
-|26|Java (OpenJDK 9 with Eclipse OpenJ9)|
-|27|Java (OpenJDK 8)|
-|28|Java (OpenJDK 7)|
-|29|JavaScript (nodejs 8.5.0)|
-|30|JavaScript (nodejs 7.10.1)|
-|31|OCaml (4.05.0)|
-|32|Octave (4.2.0)|
-|33|Pascal (fpc 3.0.0)|
-|34|Python (3.6.0)|
-|35|Python (3.5.3)|
-|36|Python (2.7.9)|
-|37|Python (2.6.9)|
-|38|Ruby (2.4.0)|
-|39|Ruby (2.3.3)|
-|40|Ruby (2.2.6)|
-|41|Ruby (2.1.9)|
-|42|Rust (1.20.0)|
-|43|Text (plain text)|
+|     # | Name                                 |
+| :---: | :---:                                |
+|     1 | Bash (4.4)                           |
+|     2 | Bash (4.0)                           |
+|     3 | Basic (fbc 1.05.0)                   |
+|     4 | C (gcc 7.2.0)                        |
+|     5 | C (gcc 6.4.0)                        |
+|     6 | C (gcc 6.3.0)                        |
+|     7 | C (gcc 5.4.0)                        |
+|     8 | C (gcc 4.9.4)                        |
+|     9 | C (gcc 4.8.5)                        |
+|    10 | C++ (g++ 7.2.0)                      |
+|    11 | C++ (g++ 6.4.0)                      |
+|    12 | C++ (g++ 6.3.0)                      |
+|    13 | C++ (g++ 5.4.0)                      |
+|    14 | C++ (g++ 4.9.4)                      |
+|    15 | C++ (g++ 4.8.5)                      |
+|    16 | C# (mono 5.4.0.167)                  |
+|    17 | C# (mono 5.2.0.224)                  |
+|    18 | Clojure (1.8.0)                      |
+|    19 | Crystal (0.23.1)                     |
+|    20 | Elixir (1.5.1)                       |
+|    21 | Erlang (OTP 20.0)                    |
+|    22 | Go (1.9)                             |
+|    23 | Haskell (ghc 8.2.1)                  |
+|    24 | Haskell (ghc 8.0.2)                  |
+|    25 | Insect (5.0.0)                       |
+|    26 | Java (OpenJDK 9 with Eclipse OpenJ9) |
+|    27 | Java (OpenJDK 8)                     |
+|    28 | Java (OpenJDK 7)                     |
+|    29 | JavaScript (nodejs 8.5.0)            |
+|    30 | JavaScript (nodejs 7.10.1)           |
+|    31 | OCaml (4.05.0)                       |
+|    32 | Octave (4.2.0)                       |
+|    33 | Pascal (fpc 3.0.0)                   |
+|    34 | Python (3.6.0)                       |
+|    35 | Python (3.5.3)                       |
+|    36 | Python (2.7.9)                       |
+|    37 | Python (2.6.9)                       |
+|    38 | Ruby (2.4.0)                         |
+|    39 | Ruby (2.3.3)                         |
+|    40 | Ruby (2.2.6)                         |
+|    41 | Ruby (2.1.9)                         |
+|    42 | Rust (1.20.0)                        |
+|    43 | Text (plain text)                    |
 
 ## Sandbox Environment
 Sandbox environment is also included in this image. For sandbox environment we are using [isolate](https://github.com/ioi/isolate) (licensed under [GPL v2](https://github.com/ioi/isolate/blob/master/LICENSE)).
