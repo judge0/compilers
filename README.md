@@ -20,7 +20,7 @@ Here is a list of supported languages:
 |:---:|:---:|
 |1 |Bash (4.4)|
 |2 |Bash (4.0)|
-|3 |Basic (fbc 1.07.1) |
+|3 |Basic (fbc 1.05.0) |
 |4 |C (gcc 7.2.0)|
 |5 |C (gcc 6.4.0)|
 |6 |C (gcc 6.3.0)|

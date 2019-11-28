@@ -197,16 +197,13 @@ ENV NODE_VERSIONS \
       7.10.1
 RUN set -xe && \
     for NODE_VERSION in $NODE_VERSIONS; do \
-      curl -fSsL "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz" -o /tmp/node-$NODE_VERSION.tar.gz; \
+      curl -fSsL "https://nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" -o /tmp/node-$NODE_VERSION.tar.gz; \
     done; \
     for NODE_VERSION in $NODE_VERSIONS; do \
       mkdir /tmp/node-$NODE_VERSION && \
       tar -xf /tmp/node-$NODE_VERSION.tar.gz -C /tmp/node-$NODE_VERSION --strip-components=1 && \
       rm /tmp/node-$NODE_VERSION.tar.gz && \
-      cd /tmp/node-$NODE_VERSION && \
-      ./configure \
-        --prefix=/usr/local/node-$NODE_VERSION && \
-      make -j"$(nproc)" && make install && \
+      cp -R /tmp/node-$NODE_VERSION /usr/local/node-$NODE_VERSION && \
       rm -rf /tmp/node-$NODE_VERSION; \
     done
 
@@ -326,10 +323,10 @@ RUN set -xe && \
 
 
 ENV FBC_VERSIONS \
-      1.07.1
+      1.05.0
 RUN set -xe && \
     for FBC_VERSION in $FBC_VERSIONS; do \
-      curl -fSsL "https://downloads.sourceforge.net/project/fbc/Binaries%20-%20Linux/FreeBASIC-$FBC_VERSION-linux-x86_64.tar.gz" -o /tmp/fbc-$FBC_VERSION.tar.gz; \
+      curl -fSsL "https://sourceforge.net/projects/fbc/files/Older%20versions/$FBC_VERSION/FreeBASIC-$FBC_VERSION-linux-x86_64.tar.gz" -o /tmp/fbc-$FBC_VERSION.tar.gz; \
     done; \
     for FBC_VERSION in $FBC_VERSIONS; do \
       mkdir /usr/local/fbc-$FBC_VERSION && \
