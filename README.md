@@ -43,7 +43,7 @@ Here is a list of supported languages:
 |    23 | Haskell (ghc 8.2.1)                  |
 |    24 | Haskell (ghc 8.0.2)                  |
 |    25 | Insect (5.0.0)                       |
-|    26 | Java (OpenJDK 9 with Eclipse OpenJ9) |
+|    26 | Java (OpenJDK 9)                     |
 |    27 | Java (OpenJDK 8)                     |
 |    28 | Java (OpenJDK 7)                     |
 |    29 | JavaScript (nodejs 8.5.0)            |
