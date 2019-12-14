@@ -6,12 +6,14 @@ if [[ ! -f /.dockerenv ]]; then
     exit -1
 fi
 
+LANG_PROPERTIES_FILE=lang.properties
+
 prefered_lang=$1
 
 for lang in *; do
     [[ ! -d $lang ]] && continue
 
-    properties=$lang/lang.properties
+    properties=$lang/$LANG_PROPERTIES_FILE
     [[ ! -f $properties ]] && continue
 
     [[ $prefered_lang != "" && $prefered_lang != $lang ]] && continue
@@ -26,7 +28,7 @@ for lang in *; do
         $COMPILE_CMD
         echo "world" | bash -c "$RUN_CMD"
 
-        [[ -f $BINARY_FILE ]] && rm $BINARY_FILE
+        rm $(ls . | grep -v $SOURCE_FILE | grep -v $LANG_PROPERTIES_FILE) &> /dev/null || true
 
         cd ..
 
