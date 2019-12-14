@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+
+if [[ ! -f /.dockerenv ]]; then
+    echo "Tests should be run inside a Docker container. Use bin/run-tests script from the root of the project."
+    exit -1
+fi
+
+prefered_lang=$1
+
+for lang in *; do
+    [[ ! -d $lang ]] && continue
+
+    properties=$lang/lang.properties
+    [[ ! -f $properties ]] && continue
+
+    [[ $prefered_lang != "" && $prefered_lang != $lang ]] && continue
+
+    source $properties
+    for VERSION in $VERSIONS; do
+        source $properties
+
+        echo "--- $NAME ---"
+        cd $lang
+
+        $COMPILE_CMD
+        echo "world" | bash -c "$RUN_CMD"
+
+        [[ -f $BINARY_FILE ]] && rm $BINARY_FILE
+
+        cd ..
+
+        echo
+    done
+done

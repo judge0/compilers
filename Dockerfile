@@ -1,7 +1,6 @@
 FROM judge0/buildpack-deps:buster-2019-11-23
 
 ENV GCC_VERSIONS \
-      5.4.0 \
       7.4.0 \
       8.3.0 \
       9.2.0
@@ -15,10 +14,15 @@ RUN set -xe && \
       ./contrib/download_prerequisites && \
       { rm *.tar.* || true; } && \
       tmpdir="$(mktemp -d)" && \
-      cd "$tmpdir" && \
+      cd "$tmpdir"; \
+      if [ $GCC_VERSION == "9.2.0" ]; then \
+        ENABLE_FORTRAN=",fortran"; \
+      else \
+        ENABLE_FORTRAN=""; \
+      fi; \
       /tmp/gcc-$GCC_VERSION/configure \
         --disable-multilib \
-        --enable-languages=c,c++,fortran \
+        --enable-languages=c,c++$ENABLE_FORTRAN \
         --prefix=/usr/local/gcc-$GCC_VERSION && \
       make -j$(nproc) && \
       make -j$(nproc) install-strip && \
@@ -59,6 +63,25 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+ENV OCTAVE_VERSIONS \
+      5.1.0
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends gfortran libblas-dev liblapack-dev libpcre3-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    for OCTAVE_VERSION in $OCTAVE_VERSIONS; do \
+      curl -fSsL "https://ftp.gnu.org/gnu/octave/octave-$OCTAVE_VERSION.tar.gz" -o /tmp/octave-$OCTAVE_VERSION.tar.gz && \
+      mkdir /tmp/octave-$OCTAVE_VERSION && \
+      tar -xf /tmp/octave-$OCTAVE_VERSION.tar.gz -C /tmp/octave-$OCTAVE_VERSION --strip-components=1 && \
+      rm /tmp/octave-$OCTAVE_VERSION.tar.gz && \
+      cd /tmp/octave-$OCTAVE_VERSION && \
+      ./configure \
+        --prefix=/usr/local/octave-$OCTAVE_VERSION && \
+      make -j$(nproc) && \
+      make -j$(nproc) install && \
+      rm -rf /tmp/*; \
+    done
+
 RUN set -xe && \
     curl -fSsL "https://download.java.net/java/GA/jdk13.0.1/cec27d702aa74d5a8630c65ae61e4305/9/GPL/openjdk-13.0.1_linux-x64_bin.tar.gz" -o /tmp/openjdk13.tar.gz && \
     mkdir /usr/local/openjdk13 && \
@@ -84,25 +107,6 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
-ENV OCTAVE_VERSIONS \
-      5.1.0
-RUN set -xe && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends gfortran libblas-dev liblapack-dev libpcre3-dev && \
-    rm -rf /var/lib/apt/lists/* && \
-    for OCTAVE_VERSION in $OCTAVE_VERSIONS; do \
-      curl -fSsL "https://ftp.gnu.org/gnu/octave/octave-$OCTAVE_VERSION.tar.gz" -o /tmp/octave-$OCTAVE_VERSION.tar.gz && \
-      mkdir /tmp/octave-$OCTAVE_VERSION && \
-      tar -xf /tmp/octave-$OCTAVE_VERSION.tar.gz -C /tmp/octave-$OCTAVE_VERSION --strip-components=1 && \
-      rm /tmp/octave-$OCTAVE_VERSION.tar.gz && \
-      cd /tmp/octave-$OCTAVE_VERSION && \
-      ./configure \
-        --prefix=/usr/local/octave-$OCTAVE_VERSION && \
-      make -j$(nproc) && \
-      make -j$(nproc) install && \
-      rm -rf /tmp/*; \
-    done
-
 ENV FPC_VERSIONS \
       3.0.4
 RUN set -xe && \
@@ -120,7 +124,7 @@ ENV HASKELL_VERSIONS \
       8.8.1
 RUN set -xe && \
     apt-get update && \
-    apt-get install -y --no-install-recommends libgmp-dev && \
+    apt-get install -y --no-install-recommends libgmp-dev libtinfo5 && \
     rm -rf /var/lib/apt/lists/* && \
     for HASKELL_VERSION in $HASKELL_VERSIONS; do \
       curl -fSsL "https://downloads.haskell.org/~ghc/$HASKELL_VERSION/ghc-$HASKELL_VERSION-x86_64-deb8-linux.tar.xz" -o /tmp/ghc-$HASKELL_VERSION.tar.xz && \
@@ -141,10 +145,10 @@ RUN set -xe && \
     apt-get install -y --no-install-recommends cmake && \
     rm -rf /var/lib/apt/lists/* && \
     for MONO_VERSION in $MONO_VERSIONS; do \
-      curl -fSsL "https://download.mono-project.com/sources/mono/mono-$MONO_VERSION.tar.bz2" -o /tmp/mono-$MONO_VERSION.tar.bz2 && \
+      curl -fSsL "https://download.mono-project.com/sources/mono/mono-$MONO_VERSION.tar.xz" -o /tmp/mono-$MONO_VERSION.tar.xz && \
       mkdir /tmp/mono-$MONO_VERSION && \
-      tar -xf /tmp/mono-$MONO_VERSION.tar.bz2 -C /tmp/mono-$MONO_VERSION --strip-components=1 && \
-      rm /tmp/mono-$MONO_VERSION.tar.bz2 && \
+      tar -xf /tmp/mono-$MONO_VERSION.tar.xz -C /tmp/mono-$MONO_VERSION --strip-components=1 && \
+      rm /tmp/mono-$MONO_VERSION.tar.xz && \
       cd /tmp/mono-$MONO_VERSION && \
       ./configure \
         --prefix=/usr/local/mono-$MONO_VERSION && \
@@ -258,7 +262,7 @@ RUN set -xe && \
       cd /tmp/ocaml-$OCAML_VERSION && \
       ./configure \
         -prefix /usr/local/ocaml-$OCAML_VERSION \
-        --disable-ocamldoc --disable-debugger --disable-graph-lib && \
+        --disable-ocamldoc --disable-debugger && \
       make -j$(nproc) world.opt && \
       make -j$(nproc) install && \
       rm -rf /tmp/*; \
