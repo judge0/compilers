@@ -173,16 +173,6 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
-ENV CLOJURE_VERSIONS \
-      1.10.1.492
-RUN set -xe && \
-    for VERSION in $CLOJURE_VERSIONS; do \
-      curl -fSsL "https://download.clojure.org/install/linux-install-$VERSION.sh" -o /tmp/clojure-$VERSION.sh && \
-      chmod +x /tmp/clojure-$VERSION.sh && \
-      /tmp/clojure-$VERSION.sh --prefix /usr/local/clojure-$VERSION && \
-      rm -rf /tmp/*; \
-    done
-
 ENV ERLANG_VERSIONS \
       22.2
 RUN set -xe && \
