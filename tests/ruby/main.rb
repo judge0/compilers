@@ -1,1 +1,1 @@
-puts("hello, #{gets.chomp}!")
+puts("hello, #{gets.chomp}")

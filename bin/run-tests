@@ -4,4 +4,4 @@ IMAGE=judge0/api-base:1.0.0
 
 cd tests
 echo "Running tests on image $IMAGE"
-docker run -it --rm -v $PWD:/tests -w /tests $IMAGE ./run
+docker run -it --rm -v $PWD:/tests -w /tests $IMAGE ./run $2

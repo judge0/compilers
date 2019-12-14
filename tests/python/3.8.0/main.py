@@ -1,1 +1,1 @@
-print(f"hello, {input()}!")
+print(f"hello, {input()}")

@@ -1,1 +1,1 @@
-print "hello, " + raw_input() + "!"
+print "hello, " + raw_input()
