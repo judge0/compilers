@@ -282,19 +282,21 @@ ENV KOTLIN_VERSIONS \
       1.3.61
 RUN set -xe && \
     for VERSION in $KOTLIN_VERSIONS; do \
-      curl -fSsL "https://github.com/JetBrains/kotlin/releases/download/v$VERSION/kotlin-native-linux-$VERSION.tar.gz" -o /tmp/kotlin-$VERSION.tar.gz && \
-      mkdir /usr/local/kotlin-$VERSION && \
-      tar -xf /tmp/kotlin-$VERSION.tar.gz -C /usr/local/kotlin-$VERSION --strip-components=1 && \
+      curl -fSsL "https://github.com/JetBrains/kotlin/releases/download/v$VERSION/kotlin-compiler-$VERSION.zip" -o /tmp/kotlin-$VERSION.zip && \
+      unzip -d /usr/local/kotlin-$VERSION /tmp/kotlin-$VERSION.zip && \
+      mv /usr/local/kotlin-$VERSION/kotlinc/* /usr/local/kotlin-$VERSION/ && \
+      rm -rf /usr/local/kotlin-$VERSION/kotlinc && \
       rm -rf /tmp/*; \
     done
 
 ENV D_VERSIONS \
-      2.089.0
+      2.089.1
 RUN set -xe && \
     for VERSION in $D_VERSIONS; do \
-      curl -fSsL "https://downloads.dlang.org/releases/2.x/$VERSION/dmd.$VERSION.linux.tar.xz" -o /tmp/d-$VERSION.tar.gz && \
+      curl -fSsL "http://downloads.dlang.org/releases/2.x/$VERSION/dmd.$VERSION.linux.tar.xz" -o /tmp/d-$VERSION.tar.gz && \
       mkdir /usr/local/d-$VERSION && \
       tar -xf /tmp/d-$VERSION.tar.gz -C /usr/local/d-$VERSION --strip-components=1 && \
+      rm -rf /usr/local/d-$VERSION/linux/*32 && \
       rm -rf /tmp/*; \
     done
 
@@ -306,7 +308,8 @@ RUN set -xe && \
       mkdir /usr/local/lua-$VERSION && \
       tar -xf /tmp/lua-$VERSION.tar.gz -C /usr/local/lua-$VERSION && \
       rm -rf /tmp/*; \
-    done
+    done; \
+    ln -s /lib/x86_64-linux-gnu/libreadline.so.7 /lib/x86_64-linux-gnu/libreadline.so.6
 
 ENV TYPESCRIPT_VERSIONS \
       3.7.3
@@ -324,7 +327,7 @@ ENV NASM_VERSIONS \
 RUN set -xe && \
     for VERSION in $NASM_VERSIONS; do \
       curl -fSsL "https://www.nasm.us/pub/nasm/releasebuilds/$VERSION/nasm-$VERSION.tar.gz" -o /tmp/nasm-$VERSION.tar.gz && \
-      mkdir /tmp/nasm-$VERSIONS && \
+      mkdir /tmp/nasm-$VERSION && \
       tar -xf /tmp/nasm-$VERSION.tar.gz -C /tmp/nasm-$VERSION --strip-components=1 && \
       rm /tmp/nasm-$VERSION.tar.gz && \
       cd /tmp/nasm-$VERSION && \
