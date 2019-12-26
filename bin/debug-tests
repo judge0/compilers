@@ -1,0 +1,7 @@
+#!/bin/bash
+IMAGE=judge0/api-base:1.0.0
+[[ ! -z $1 ]] && IMAGE=$1
+
+cd tests
+echo "Debugging tests on image $IMAGE"
+docker run -it --rm -v $PWD:/tests -w /tests $IMAGE bash

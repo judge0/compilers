@@ -336,6 +336,8 @@ RUN set -xe && \
       make -j$(nproc) nasm ndisasm && \
       make -j$(nproc) strip && \
       make -j$(nproc) install && \
+      echo "/usr/local/nasm-$VERSION/bin/nasm -o main.o \$@ && ld main.o" >> /usr/local/nasm-$VERSION/bin/nasmld && \
+      chmod +x /usr/local/nasm-$VERSION/bin/nasmld && \
       rm -rf /tmp/*; \
     done
 
@@ -343,8 +345,8 @@ ENV GPROLOG_VERSIONS \
       1.4.5
 RUN set -xe && \
     for VERSION in $GPROLOG_VERSIONS; do \
-      curl -fSsl "https://gprolog.org/gprolog-$VERSION.tar.gz" -o /tmp/gprolog-$VERSION.tar.gz && \
-      mkdir /tmp/gprolog-$VERSIONS && \
+      curl -fSsL "http://gprolog.org/gprolog-$VERSION.tar.gz" -o /tmp/gprolog-$VERSION.tar.gz && \
+      mkdir /tmp/gprolog-$VERSION && \
       tar -xf /tmp/gprolog-$VERSION.tar.gz -C /tmp/gprolog-$VERSION --strip-components=1 && \
       rm /tmp/gprolog-$VERSION.tar.gz && \
       cd /tmp/gprolog-$VERSION/src && \
@@ -354,13 +356,14 @@ RUN set -xe && \
       make -j$(nproc) install-strip && \
       rm -rf /tmp/*; \
     done
+ENV PATH "/usr/local/gprolog-1.4.5/gprolog-1.4.5/bin:$PATH"
 
 ENV R_VERSIONS \
       3.6.1
 RUN set -xe && \
     for VERSION in $R_VERSIONS; do \
-      curl -fSsl "https://cloud.r-project.org/src/base/R-3/R-$VERSION.tar.gz" -o /tmp/r-$VERSION.tar.gz && \
-      mkdir /tmp/r-$VERSIONS && \
+      curl -fSsL "https://cloud.r-project.org/src/base/R-3/R-$VERSION.tar.gz" -o /tmp/r-$VERSION.tar.gz && \
+      mkdir /tmp/r-$VERSION && \
       tar -xf /tmp/r-$VERSION.tar.gz -C /tmp/r-$VERSION --strip-components=1 && \
       rm /tmp/r-$VERSION.tar.gz && \
       cd /tmp/r-$VERSION && \
@@ -375,9 +378,9 @@ ENV JULIA_VERSIONS \
       1.3.0
 RUN set -xe && \
     for VERSION in $JULIA_VERSIONS; do \
-      curl -fSsl "https://julialang-s3.julialang.org/bin/linux/x64/${VERSION%.*}/julia-$VERSION-linux-x86_64.tar.gz" -o /tmp/julia-$VERSION.tar.gz && \
+      curl -fSsL "https://julialang-s3.julialang.org/bin/linux/x64/${VERSION%.*}/julia-$VERSION-linux-x86_64.tar.gz" -o /tmp/julia-$VERSION.tar.gz && \
       mkdir /usr/local/julia-$VERSION && \
-      tar -xf /tmp/julia-$VERSION.tar.gz -C /usr/local/julia-$VERSION && \
+      tar -xf /tmp/julia-$VERSION.tar.gz -C /usr/local/julia-$VERSION --strip-components=1 && \
       rm -rf /tmp/*; \
     done
 
