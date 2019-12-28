@@ -384,6 +384,22 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+ENV SBCL_VERSIONS \
+      1.5.9
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends bison re2c && \
+    rm -rf /var/lib/apt/lists/* && \
+    for VERSION in $SBCL_VERSIONS; do \
+      curl -fSsL "https://downloads.sourceforge.net/project/sbcl/sbcl/$VERSION/sbcl-$VERSION-x86-64-linux-binary.tar.bz2" -o /tmp/sbcl-$VERSION.tar.bz2 && \
+      mkdir /tmp/sbcl-$VERSION && \
+      tar -xf /tmp/sbcl-$VERSION.tar.bz2 -C /tmp/sbcl-$VERSION --strip-components=1 && \
+      cd /tmp/sbcl-$VERSION && \
+      export INSTALL_ROOT=/usr/local/sbcl-$VERSION && \
+      sh install.sh && \
+      rm -rf /tmp/*; \
+    done
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
