@@ -278,17 +278,6 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
-ENV KOTLIN_VERSIONS \
-      1.3.61
-RUN set -xe && \
-    for VERSION in $KOTLIN_VERSIONS; do \
-      curl -fSsL "https://github.com/JetBrains/kotlin/releases/download/v$VERSION/kotlin-compiler-$VERSION.zip" -o /tmp/kotlin-$VERSION.zip && \
-      unzip -d /usr/local/kotlin-$VERSION /tmp/kotlin-$VERSION.zip && \
-      mv /usr/local/kotlin-$VERSION/kotlinc/* /usr/local/kotlin-$VERSION/ && \
-      rm -rf /usr/local/kotlin-$VERSION/kotlinc && \
-      rm -rf /tmp/*; \
-    done
-
 ENV D_VERSIONS \
       2.089.1
 RUN set -xe && \
@@ -357,32 +346,6 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 ENV PATH "/usr/local/gprolog-1.4.5/gprolog-1.4.5/bin:$PATH"
-
-ENV R_VERSIONS \
-      3.6.1
-RUN set -xe && \
-    for VERSION in $R_VERSIONS; do \
-      curl -fSsL "https://cloud.r-project.org/src/base/R-3/R-$VERSION.tar.gz" -o /tmp/r-$VERSION.tar.gz && \
-      mkdir /tmp/r-$VERSION && \
-      tar -xf /tmp/r-$VERSION.tar.gz -C /tmp/r-$VERSION --strip-components=1 && \
-      rm /tmp/r-$VERSION.tar.gz && \
-      cd /tmp/r-$VERSION && \
-      ./configure \
-        --prefix=/usr/local/r-$VERSION && \
-      make -j$(nproc) && \
-      make -j$(nproc) install && \
-      rm -rf /tmp/*; \
-    done
-
-ENV JULIA_VERSIONS \
-      1.3.0
-RUN set -xe && \
-    for VERSION in $JULIA_VERSIONS; do \
-      curl -fSsL "https://julialang-s3.julialang.org/bin/linux/x64/${VERSION%.*}/julia-$VERSION-linux-x86_64.tar.gz" -o /tmp/julia-$VERSION.tar.gz && \
-      mkdir /usr/local/julia-$VERSION && \
-      tar -xf /tmp/julia-$VERSION.tar.gz -C /usr/local/julia-$VERSION --strip-components=1 && \
-      rm -rf /tmp/*; \
-    done
 
 ENV SBCL_VERSIONS \
       1.5.9
