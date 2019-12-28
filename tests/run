@@ -27,9 +27,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 readonly LANG_PROPERTIES_FILE=lang.properties
+readonly SKIP_FILE=.skip
 
 for directory in *; do
     [[ ! -d $directory ]] && continue
+    [[ -f $directory/$SKIP_FILE ]] && continue
 
     lang_properties=$directory/$LANG_PROPERTIES_FILE
     [[ ! -f $lang_properties ]] && continue
@@ -59,7 +61,7 @@ for directory in *; do
 
                 set +e
                 isolate --cg -t 5 -x 2 -w 10 -k 128000 -p60 --cg-mem=256000 --cg-timing -f 4096 \
-                        -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+                        -E HOME=$workdir -E PATH \
                         -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash compile
 
                 if [[ $? != 0 ]]; then
@@ -78,8 +80,8 @@ for directory in *; do
             echo "Running inside isolate."
 
             set +e
-            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p30 --cg-mem=128000 --no-cg-timing -f 1024 \
-                    -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p60 --cg-mem=128000 --no-cg-timing -f 1024 \
+                    -E HOME=$workdir -E PATH \
                     -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash run < $workdir/stdin
 
             if [[ $? != 0 ]]; then

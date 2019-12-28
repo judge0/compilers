@@ -1,3 +1,3 @@
 
 main(_) ->
-    io:fwrite("hello, world").
+    io:fwrite("hello, world\n").
