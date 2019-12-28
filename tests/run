@@ -56,22 +56,42 @@ for directory in *; do
                 echo $COMPILE_CMD > $boxdir/compile
 
                 echo "Compiling inside isolate."
+
+                set +e
                 isolate --cg -t 5 -x 2 -w 10 -k 128000 -p60 --cg-mem=256000 --cg-timing -f 4096 \
-                        -E HOME=$workdir -E PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\" \
+                        -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
                         -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash compile
+
+                if [[ $? != 0 ]]; then
+                    echo "Running isolate cleanup"
+                    isolate --cg --cleanup
+                    rm -rf $workdir || true
+                    exit -1
+                fi
+
+                set -e
             fi
 
             echo $RUN_CMD > $boxdir/run
             echo "world" > $workdir/stdin
 
             echo "Running inside isolate."
-            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p30 --cg-mem=128000 --cg-timing -f 1024 \
-                    -E HOME=$workdir -E PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\" \
+
+            set +e
+            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p30 --cg-mem=128000 --no-cg-timing -f 1024 \
+                    -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
                     -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash run < $workdir/stdin
+
+            if [[ $? != 0 ]]; then
+                exit_after_cleanup=true
+            fi
 
             echo "Running isolate cleanup"
             isolate --cg --cleanup
             rm -rf $workdir || true
+            [[ $exit_after_cleanup == true ]] && exit -1
+
+            set -e
         else
             $COMPILE_CMD
             echo "world" | bash -c "$RUN_CMD"
