@@ -1,7 +1,5 @@
 #!/bin/bash
-IMAGE=judge0/api-base:1.0.0
-[[ ! -z $1 ]] && IMAGE=$1
-
+[[ ! -v API_BASE_IMAGE ]] && API_BASE_IMAGE=judge0/api-base:1.0.0
 cd tests
-echo "Debugging tests on image $IMAGE"
-docker run -it --rm -v $PWD:/tests -w /tests $IMAGE bash
+echo "Opening shell for debugging inside Docker container of image $API_BASE_IMAGE"
+docker run -it --rm -v $PWD:/tests -w /tests --privileged $API_BASE_IMAGE bash

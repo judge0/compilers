@@ -6,32 +6,79 @@ if [[ ! -f /.dockerenv ]]; then
     exit -1
 fi
 
-LANG_PROPERTIES_FILE=lang.properties
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -l|--language)
+            PREFERRED_LANGUAGE="$2"
+            shift
+            shift
+        ;;
+        --isolate)
+            ISOLATE=true
+            shift
+        ;;
+        *)
+            echo "Unknown option $key"
+            echo "Usage: ./run [--language <language>] [--isolate]"
+            exit -1
+        ;;
+    esac
+done
 
-prefered_lang=$1
+readonly LANG_PROPERTIES_FILE=lang.properties
 
-for lang in *; do
-    [[ ! -d $lang ]] && continue
+for directory in *; do
+    [[ ! -d $directory ]] && continue
 
-    properties=$lang/$LANG_PROPERTIES_FILE
-    [[ ! -f $properties ]] && continue
+    lang_properties=$directory/$LANG_PROPERTIES_FILE
+    [[ ! -f $lang_properties ]] && continue
 
-    [[ $prefered_lang != "" && $prefered_lang != $lang ]] && continue
+    [[ -v PREFERRED_LANGUAGE && $PREFERRED_LANGUAGE != $directory ]] && continue
 
-    source $properties
+    source $lang_properties
     for VERSION in $VERSIONS; do
-        source $properties
+        source $lang_properties
 
         echo "--- $NAME ---"
-        cd $lang
+        cd $directory
 
-        $COMPILE_CMD
-        echo "world" | bash -c "$RUN_CMD"
+        if [[ $ISOLATE == true ]]; then
+            echo "Initializing isolate box."
 
-        rm $(ls . | grep -v $SOURCE_FILE | grep -v $LANG_PROPERTIES_FILE) &> /dev/null || true
+            workdir="$(isolate --cg --init)"
+            boxdir=$workdir/box
+            echo "Using box directory $boxdir"
+
+            cp $SOURCE_FILE $boxdir
+
+            if [[ $COMPILE_CMD != "" ]]; then
+                echo $COMPILE_CMD > $boxdir/compile
+
+                echo "Compiling inside isolate."
+                isolate --cg -t 5 -x 2 -w 10 -k 128000 -p60 --cg-mem=256000 --cg-timing -f 4096 \
+                        -E HOME=$workdir -E PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\" \
+                        -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash compile
+            fi
+
+            echo $RUN_CMD > $boxdir/run
+            echo "world" > $workdir/stdin
+
+            echo "Running inside isolate."
+            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p30 --cg-mem=128000 --cg-timing -f 1024 \
+                    -E HOME=$workdir -E PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\" \
+                    -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash run < $workdir/stdin
+
+            echo "Running isolate cleanup"
+            isolate --cg --cleanup
+            rm -rf $workdir || true
+        else
+            $COMPILE_CMD
+            echo "world" | bash -c "$RUN_CMD"
+            rm $(ls . | grep -v $SOURCE_FILE | grep -v $LANG_PROPERTIES_FILE) &> /dev/null || true
+        fi
 
         cd ..
-
         echo
     done
 done
