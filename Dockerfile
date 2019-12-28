@@ -1,5 +1,6 @@
-FROM judge0/buildpack-deps:buster-2019-11-23
+FROM judge0/buildpack-deps:buster-2019-12-28
 
+# Check for latest version here: https://gcc.gnu.org/releases.html, https://ftpmirror.gnu.org/gcc
 ENV GCC_VERSIONS \
       7.4.0 \
       8.3.0 \
@@ -29,8 +30,9 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.ruby-lang.org/en/downloads
 ENV RUBY_VERSIONS \
-      2.6.5
+      2.7.0
 RUN set -xe && \
     for VERSION in $RUBY_VERSIONS; do \
       curl -fSsL "https://cache.ruby-lang.org/pub/ruby/${VERSION%.*}/ruby-$VERSION.tar.gz" -o /tmp/ruby-$VERSION.tar.gz && \
@@ -46,8 +48,9 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.python.org/downloads
 ENV PYTHON_VERSIONS \
-      3.8.0 \
+      3.8.1 \
       2.7.17
 RUN set -xe && \
     for VERSION in $PYTHON_VERSIONS; do \
@@ -63,6 +66,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://ftp.gnu.org/gnu/octave
 ENV OCTAVE_VERSIONS \
       5.1.0
 RUN set -xe && \
@@ -82,6 +86,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://jdk.java.net
 RUN set -xe && \
     curl -fSsL "https://download.java.net/java/GA/jdk13.0.1/cec27d702aa74d5a8630c65ae61e4305/9/GPL/openjdk-13.0.1_linux-x64_bin.tar.gz" -o /tmp/openjdk13.tar.gz && \
     mkdir /usr/local/openjdk13 && \
@@ -91,6 +96,7 @@ RUN set -xe && \
     ln -s /usr/local/openjdk13/bin/java /usr/local/bin/java && \
     ln -s /usr/local/openjdk13/bin/jar /usr/local/bin/jar
 
+# Check for latest version here: https://ftpmirror.gnu.org/bash
 ENV BASH_VERSIONS \
       5.0
 RUN set -xe && \
@@ -107,6 +113,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.freepascal.org/download.html
 ENV FPC_VERSIONS \
       3.0.4
 RUN set -xe && \
@@ -120,6 +127,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.haskell.org/ghc/download.html
 ENV HASKELL_VERSIONS \
       8.8.1
 RUN set -xe && \
@@ -138,6 +146,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.mono-project.com/download/stable
 ENV MONO_VERSIONS \
       6.6.0.161
 RUN set -xe && \
@@ -157,8 +166,9 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://nodejs.org/en
 ENV NODE_VERSIONS \
-      12.13.1
+      12.14.0
 RUN set -xe && \
     for VERSION in $NODE_VERSIONS; do \
       curl -fSsL "https://nodejs.org/dist/v$VERSION/node-v$VERSION.tar.gz" -o /tmp/node-$VERSION.tar.gz && \
@@ -173,6 +183,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://github.com/erlang/otp/releases
 ENV ERLANG_VERSIONS \
       22.2
 RUN set -xe && \
@@ -194,6 +205,7 @@ RUN set -xe && \
     done; \
     ln -s /usr/local/erlang-22.2/bin/erl /usr/local/bin/erl
 
+# Check for latest version here: https://github.com/elixir-lang/elixir/releases
 ENV ELIXIR_VERSIONS \
       1.9.4
 RUN set -xe && \
@@ -206,8 +218,9 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.rust-lang.org
 ENV RUST_VERSIONS \
-      1.39.0
+      1.40.0
 RUN set -xe && \
     for VERSION in $RUST_VERSIONS; do \
       curl -fSsL "https://static.rust-lang.org/dist/rust-$VERSION-x86_64-unknown-linux-gnu.tar.gz" -o /tmp/rust-$VERSION.tar.gz && \
@@ -221,6 +234,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://golang.org/dl
 ENV GO_VERSIONS \
       1.13.5
 RUN set -xe && \
@@ -231,6 +245,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://sourceforge.net/projects/fbc/files/Binaries%20-%20Linux
 ENV FBC_VERSIONS \
       1.07.1
 RUN set -xe && \
@@ -241,6 +256,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://github.com/ocaml/ocaml/releases
 ENV OCAML_VERSIONS \
       4.09.0
 RUN set -xe && \
@@ -258,6 +274,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.php.net/downloads
 ENV PHP_VERSIONS \
       7.4.0
 RUN set -xe && \
@@ -278,6 +295,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://dlang.org/download.html#dmd
 ENV D_VERSIONS \
       2.089.1
 RUN set -xe && \
@@ -289,6 +307,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://www.lua.org/download.html
 ENV LUA_VERSIONS \
       5.3.5
 RUN set -xe && \
@@ -300,6 +319,7 @@ RUN set -xe && \
     done; \
     ln -s /lib/x86_64-linux-gnu/libreadline.so.7 /lib/x86_64-linux-gnu/libreadline.so.6
 
+# Check for latest version here: https://github.com/microsoft/TypeScript/releases
 ENV TYPESCRIPT_VERSIONS \
       3.7.3
 RUN set -xe && \
@@ -311,6 +331,7 @@ RUN set -xe && \
       npm install -g typescript@$VERSION; \
     done
 
+# Check for latest version here: https://nasm.us
 ENV NASM_VERSIONS \
       2.14.02
 RUN set -xe && \
@@ -330,6 +351,7 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: http://gprolog.org/#download
 ENV GPROLOG_VERSIONS \
       1.4.5
 RUN set -xe && \
@@ -347,6 +369,7 @@ RUN set -xe && \
     done
 ENV PATH "/usr/local/gprolog-1.4.5/gprolog-1.4.5/bin:$PATH"
 
+# Check for latest version here: http://www.sbcl.org/platform-table.html
 ENV SBCL_VERSIONS \
       1.5.9
 RUN set -xe && \
