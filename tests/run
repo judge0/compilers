@@ -74,6 +74,10 @@ for directory in *; do
                 set -e
             fi
 
+            if [[ $RUN_CMD_ISOLATE != "" ]]; then
+                RUN_CMD=$RUN_CMD_ISOLATE
+                unset RUN_CMD_ISOLATE
+            fi
             echo $RUN_CMD > $boxdir/run
             echo "world" > $workdir/stdin
 

@@ -276,7 +276,7 @@ RUN set -xe && \
 
 # Check for latest version here: https://www.php.net/downloads
 ENV PHP_VERSIONS \
-      7.4.0
+      7.4.1
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends bison re2c && \
