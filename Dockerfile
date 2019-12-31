@@ -323,7 +323,7 @@ RUN set -xe && \
 
 # Check for latest version here: https://github.com/microsoft/TypeScript/releases
 ENV TYPESCRIPT_VERSIONS \
-      3.7.3
+      3.7.4
 RUN set -xe && \
     curl -fSsL "https://deb.nodesource.com/setup_12.x" | bash - && \
     apt-get update && \
@@ -373,7 +373,7 @@ ENV PATH "/usr/local/gprolog-1.4.5/gprolog-1.4.5/bin:$PATH"
 
 # Check for latest version here: http://www.sbcl.org/platform-table.html
 ENV SBCL_VERSIONS \
-      1.5.9
+      2.0.0
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends bison re2c && \
