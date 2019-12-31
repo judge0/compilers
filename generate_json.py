@@ -61,7 +61,10 @@ if __name__ == "__main__":
         }
 
         if language["COMPILE_CMD"] != "":
-            cleaned_language["compile_cmd"] = language["COMPILE_CMD"]
+            compile_cmd = language["COMPILE_CMD"]
+            if "COMPILE_CMD_ISOLATE" in language:
+                compile_cmd = language["COMPILE_CMD_ISOLATE"]
+            cleaned_language["compile_cmd"] = compile_cmd
 
         run_cmd = language["RUN_CMD"]
         if "RUN_CMD_ISOLATE" in language:
