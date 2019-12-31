@@ -49,7 +49,7 @@ if __name__ == "__main__":
             lang_properties = f.read()
         languages.extend(parse_lang_properties(lang_properties))
 
-    languages.sort(key=lambda x: x["NAME"])
+    languages.sort(key=lambda x: x["NAME"].lower())
 
     cleaned_languages = []
     for id, language in enumerate(languages, start=1):
