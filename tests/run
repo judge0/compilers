@@ -18,6 +18,10 @@ while [[ $# -gt 0 ]]; do
             ISOLATE=true
             shift
         ;;
+        --skip-cleanup)
+            SKIP_CLEANUP=true
+            shift
+        ;;
         *)
             echo "Unknown option $key"
             echo "Usage: ./run [--language <language>] [--isolate]"
@@ -48,7 +52,16 @@ for directory in *; do
         if [[ $ISOLATE == true ]]; then
             echo "Initializing isolate box."
 
+            set +e
             workdir="$(isolate --cg --init)"
+            isolate_exit=$?
+            set -e
+            if [[ $isolate_exit != 0 ]]; then
+                echo "Sandbox not cleaned. Cleaning now."
+                isolate --cg --cleanup
+                workdir="$(isolate --cg --init)"
+            fi
+
             boxdir=$workdir/box
             echo "Using box directory $boxdir"
 
@@ -65,13 +78,17 @@ for directory in *; do
 
                 set +e
                 isolate --cg -t 5 -x 2 -w 10 -k 128000 -p60 --cg-mem=256000 --cg-timing -f 4096 \
-                        -E HOME=$workdir -E PATH \
+                        -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
                         -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash compile
 
                 if [[ $? != 0 ]]; then
-                    echo "Running isolate cleanup"
-                    isolate --cg --cleanup
-                    rm -rf $workdir || true
+                    if [[ $SKIP_CLEANUP != true ]]; then
+                        echo "Running isolate cleanup."
+                        isolate --cg --cleanup
+                        rm -rf $workdir || true
+                    else
+                        echo "Skipping cleanup after execution."
+                    fi
                     exit -1
                 fi
 
@@ -89,16 +106,20 @@ for directory in *; do
 
             set +e
             isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p60 --cg-mem=128000 --no-cg-timing -f 1024 \
-                    -E HOME=$workdir -E PATH \
+                    -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
                     -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash run < $workdir/stdin
 
             if [[ $? != 0 ]]; then
                 exit_after_cleanup=true
             fi
 
-            echo "Running isolate cleanup"
-            isolate --cg --cleanup
-            rm -rf $workdir || true
+            if [[ $SKIP_CLEANUP != true ]]; then
+                echo "Running isolate cleanup."
+                isolate --cg --cleanup
+                rm -rf $workdir || true
+            else
+                echo "Skipping cleanup after execution."
+            fi
             [[ $exit_after_cleanup == true ]] && exit -1
 
             set -e

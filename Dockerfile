@@ -369,7 +369,6 @@ RUN set -xe && \
       make -j$(nproc) install-strip && \
       rm -rf /tmp/*; \
     done
-ENV PATH "/usr/local/gprolog-1.4.5/gprolog-1.4.5/bin:$PATH"
 
 # Check for latest version here: http://www.sbcl.org/platform-table.html
 ENV SBCL_VERSIONS \
