@@ -387,6 +387,23 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://ftp.gnu.org/gnu/gnucobol
+ENV COBOL_VERSIONS \
+      2.2
+RUN set -xe && \
+    for VERSION in $COBOL_VERSIONS; do \
+      curl -fSsL "https://ftp.gnu.org/gnu/gnucobol/gnucobol-$VERSION.tar.xz" -o /tmp/gnucobol-$VERSION.tar.xz && \
+      mkdir /tmp/gnucobol-$VERSION && \
+      tar -xf /tmp/gnucobol-$VERSION.tar.xz -C /tmp/gnucobol-$VERSION --strip-components=1 && \
+      rm /tmp/gnucobol-$VERSION.tar.xz && \
+      cd /tmp/gnucobol-$VERSION && \
+      ./configure \
+        --prefix=/usr/local/gnucobol-$VERSION && \
+      make -j$(nproc) && \
+      make -j$(nproc) install && \
+      rm -rf /tmp/*; \
+    done
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
@@ -408,4 +425,4 @@ RUN set -xe && \
 ENV BOX_ROOT /var/local/lib/isolate
 
 LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com"
-LABEL version="1.0.0"
+LABEL version="1.1.0"
