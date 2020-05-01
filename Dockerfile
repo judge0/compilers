@@ -404,6 +404,20 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://swift.org/download
+ENV SWIFT_VERSIONS \
+      5.2.3
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends libncurses5 && \
+    rm -rf /var/lib/apt/lists/* && \
+    for VERSION in $SWIFT_VERSIONS; do \
+      curl -fSsL "https://swift.org/builds/swift-$VERSION-release/ubuntu1804/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-ubuntu18.04.tar.gz" -o /tmp/swift-$VERSION.tar.gz && \
+      mkdir /usr/local/swift-$VERSION && \
+      tar -xf /tmp/swift-$VERSION.tar.gz -C /usr/local/swift-$VERSION --strip-components=2 && \
+      rm -rf /tmp/*; \
+    done
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
