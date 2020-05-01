@@ -418,6 +418,18 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Check for latest version here: https://kotlinlang.org
+ENV KOTLIN_VERSIONS \
+      1.3.70
+RUN set -xe && \
+    for VERSION in $KOTLIN_VERSIONS; do \
+      curl -fSsL "https://github.com/JetBrains/kotlin/releases/download/v$VERSION/kotlin-compiler-$VERSION.zip" -o /tmp/kotlin-$VERSION.zip && \
+      unzip -d /usr/local/kotlin-$VERSION /tmp/kotlin-$VERSION.zip && \
+      mv /usr/local/kotlin-$VERSION/kotlinc/* /usr/local/kotlin-$VERSION/ && \
+      rm -rf /usr/local/kotlin-$VERSION/kotlinc && \
+      rm -rf /tmp/*; \
+    done
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \

@@ -77,7 +77,7 @@ for directory in *; do
                 echo "Compiling inside isolate."
 
                 set +e
-                isolate --cg -t 5 -x 2 -w 10 -k 128000 -p120 --cg-timing --cg-mem=256000 -f 4096 \
+                isolate --cg -t 15 -x 0 -w 20 -k 128000 -p120 --cg-timing --cg-mem=512000 -f 4096 \
                         -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
                         -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash compile
 
