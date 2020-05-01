@@ -430,6 +430,18 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# I cannot run Scala in isolate because compilation hangs, but this instalation works.
+# Check for latest version here: https://scala-lang.org
+# ENV SCALA_VERSIONS \
+#       2.13.2
+# RUN set -xe && \
+#     for VERSION in $SCALA_VERSIONS; do \
+#       curl -fSsL "https://downloads.lightbend.com/scala/$VERSION/scala-$VERSION.tgz" -o /tmp/scala-$VERSION.tgz && \
+#       mkdir /usr/local/scala-$VERSION && \
+#       tar -xf /tmp/scala-$VERSION.tgz -C /usr/local/scala-$VERSION --strip-components=1 && \
+#       rm -rf /tmp/*; \
+#     done
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
