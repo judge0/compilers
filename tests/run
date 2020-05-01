@@ -124,7 +124,7 @@ for directory in *; do
 
             set -e
         else
-            $COMPILE_CMD
+            bash -c "$COMPILE_CMD"
             echo "world" | bash -c "$RUN_CMD"
             rm $(ls . | grep -v \.${SOURCE_FILE##*.} | grep -v $LANG_PROPERTIES_FILE) &> /dev/null || true
         fi
