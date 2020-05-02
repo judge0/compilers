@@ -450,6 +450,13 @@ RUN set -xe && \
     apt-get install -y --no-install-recommends mono-vbnc && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
+# Check for latest version here: https://packages.debian.org/buster/clang-7
+# Used for C, C++ and Objective-C.
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends clang-7 gnustep-devel && \
+    rm -rf /var/lib/apt/lists/*
+
 # Work in progress: https://github.com/ioi/isolate/issues/90
 # Check for latest version here: https://scala-lang.org
 # ENV SCALA_VERSIONS \
