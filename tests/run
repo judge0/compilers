@@ -32,6 +32,7 @@ done
 
 readonly LANG_PROPERTIES_FILE=lang.properties
 readonly SKIP_FILE=.skip
+readonly SQLITE_DB=db.sqlite
 
 for directory in *; do
     [[ ! -d $directory ]] && continue
@@ -66,6 +67,7 @@ for directory in *; do
             echo "Using box directory $boxdir"
 
             cp $SOURCE_FILE $boxdir
+            [[ -f $SQLITE_DB ]] && cp $SQLITE_DB $boxdir
 
             if [[ $COMPILE_CMD != "" ]]; then
                 if [[ $COMPILE_CMD_ISOLATE != "" ]]; then
@@ -126,7 +128,7 @@ for directory in *; do
         else
             bash -c "$COMPILE_CMD"
             echo "world" | bash -c "$RUN_CMD"
-            rm $(ls . | grep -v \.${SOURCE_FILE##*.} | grep -v $LANG_PROPERTIES_FILE) &> /dev/null || true
+            rm $(ls . | grep -v \.${SOURCE_FILE##*.} | grep -v $LANG_PROPERTIES_FILE | grep -v $SQLITE_DB) &> /dev/null || true
         fi
 
         cd ..

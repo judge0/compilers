@@ -432,7 +432,8 @@ RUN set -xe && \
 
 # Check for latest version here: https://hub.docker.com/_/mono
 # I currently use this to add support for Visual Basic.Net but this can be also
-# used to support C# language.
+# used to support C# language which has been already supported but with manual
+# installation of Mono (see above).
 ENV MONO_VERSION 6.6.0.161
 RUN set -xe && \
     apt-get update && \
@@ -451,7 +452,7 @@ RUN set -xe && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Check for latest version here: https://packages.debian.org/buster/clang-7
-# Used for C, C++ and Objective-C.
+# Used for additional compilers for C, C++ and used for Objective-C.
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends clang-7 gnustep-devel && \
@@ -476,6 +477,13 @@ RUN set -xe && \
       make -j$(nproc) install && \
       rm -rf /tmp/*; \
     done
+
+# Check for latest version here: https://packages.debian.org/buster/sqlite3
+# Used for support of SQLite.
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends sqlite3 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Work in progress: https://github.com/ioi/isolate/issues/90
 # Check for latest version here: https://scala-lang.org
