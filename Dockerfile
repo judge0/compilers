@@ -457,6 +457,26 @@ RUN set -xe && \
     apt-get install -y --no-install-recommends clang-7 gnustep-devel && \
     rm -rf /var/lib/apt/lists/*
 
+# Check for latest version here: https://cloud.r-project.org/src/base
+ENV R_VERSIONS \
+      4.0.0
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends libpcre2-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    for VERSION in $R_VERSIONS; do \
+      curl -fSsL "https://cloud.r-project.org/src/base/R-4/R-$VERSION.tar.gz" -o /tmp/r-$VERSION.tar.gz && \
+      mkdir /tmp/r-$VERSION && \
+      tar -xf /tmp/r-$VERSION.tar.gz -C /tmp/r-$VERSION --strip-components=1 && \
+      rm /tmp/r-$VERSION.tar.gz && \
+      cd /tmp/r-$VERSION && \
+      ./configure \
+        --prefix=/usr/local/r-$VERSION && \
+      make -j$(nproc) && \
+      make -j$(nproc) install && \
+      rm -rf /tmp/*; \
+    done
+
 # Work in progress: https://github.com/ioi/isolate/issues/90
 # Check for latest version here: https://scala-lang.org
 # ENV SCALA_VERSIONS \
@@ -481,13 +501,12 @@ RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends git libcap-dev && \
     rm -rf /var/lib/apt/lists/* && \
-    git clone https://github.com/ioi/isolate.git /tmp/isolate && \
+    git clone https://github.com/judge0/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    git checkout 18554e83793508acd1032d0cf4229a332c43085e && \
-    echo "num_boxes = 2147483647" >> default.cf && \
+    git checkout c43acde2bde22b0f18ec5e3a0f3ebd66d96b0bee && \
     make -j$(nproc) install && \
     rm -rf /tmp/*
 ENV BOX_ROOT /var/local/lib/isolate
 
-LABEL maintainer="Herman Zvonimir Došilović, hermanz.dosilovic@gmail.com"
+LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
 LABEL version="1.1.0"
