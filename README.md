@@ -46,10 +46,11 @@
 |35|R (4.0.0)|
 |36|Ruby (2.7.0)|
 |37|Rust (1.40.0)|
-|38|SQL (SQLite 3.27.2)|
-|39|Swift (5.2.3)|
-|40|TypeScript (3.7.4)|
-|41|Visual Basic<span>.</span>Net (vbnc 0.0.0.5943)|
+|38|Scala (2.13.2)|
+|39|SQL (SQLite 3.27.2)|
+|40|Swift (5.2.3)|
+|41|TypeScript (3.7.4)|
+|42|Visual Basic<span>.</span>Net (vbnc 0.0.0.5943)|
 
 ## Sandbox
 For sandbox we are using [isolate](https://github.com/ioi/isolate) (licensed under [GPL v2](https://github.com/ioi/isolate/blob/master/LICENSE)).

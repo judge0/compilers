@@ -485,17 +485,16 @@ RUN set -xe && \
     apt-get install -y --no-install-recommends sqlite3 && \
     rm -rf /var/lib/apt/lists/*
 
-# Work in progress: https://github.com/ioi/isolate/issues/90
 # Check for latest version here: https://scala-lang.org
-# ENV SCALA_VERSIONS \
-#       2.13.2
-# RUN set -xe && \
-#     for VERSION in $SCALA_VERSIONS; do \
-#       curl -fSsL "https://downloads.lightbend.com/scala/$VERSION/scala-$VERSION.tgz" -o /tmp/scala-$VERSION.tgz && \
-#       mkdir /usr/local/scala-$VERSION && \
-#       tar -xf /tmp/scala-$VERSION.tgz -C /usr/local/scala-$VERSION --strip-components=1 && \
-#       rm -rf /tmp/*; \
-#     done
+ENV SCALA_VERSIONS \
+      2.13.2
+RUN set -xe && \
+    for VERSION in $SCALA_VERSIONS; do \
+      curl -fSsL "https://downloads.lightbend.com/scala/$VERSION/scala-$VERSION.tgz" -o /tmp/scala-$VERSION.tgz && \
+      mkdir /usr/local/scala-$VERSION && \
+      tar -xf /tmp/scala-$VERSION.tgz -C /usr/local/scala-$VERSION --strip-components=1 && \
+      rm -rf /tmp/*; \
+    done
 
 RUN set -xe && \
     apt-get update && \
@@ -517,4 +516,4 @@ RUN set -xe && \
 ENV BOX_ROOT /var/local/lib/isolate
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.1.0"
+LABEL version="1.2.0"
