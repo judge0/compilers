@@ -1,0 +1,1 @@
+0 * * * * /update/c3 &> /var/log/c3.log

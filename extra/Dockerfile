@@ -51,7 +51,7 @@ RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends cron && \
     rm -rf /var/lib/apt/lists/* && \
-    crontab /etc/cron.d/*
+    cat /etc/cron.d/* | crontab -
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
