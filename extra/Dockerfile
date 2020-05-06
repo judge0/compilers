@@ -10,6 +10,14 @@ RUN apt-get update && \
         scipy && \
     rm -rf /var/lib/apt/lists/*
 
+COPY ./bin/update/nim /update/
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends cron && \
+    /update/nim && \
+    echo "0 0 * * * /update/nim &> /var/log/nim.log" | crontab - && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
