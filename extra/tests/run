@@ -107,7 +107,7 @@ for directory in *; do
             echo "Running inside isolate."
 
             set +e
-            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p60 --cg-timing --cg-mem=128000 -f 1024 \
+            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p60 --cg-timing --cg-mem=128000 --share-net -f 5120 \
                     -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
                     -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash run < $workdir/stdin
 

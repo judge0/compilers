@@ -18,6 +18,11 @@ RUN set -xe && \
     echo "0 0 * * * /update/nim &> /var/log/nim.log" | crontab - && \
     rm -rf /var/lib/apt/lists/*
 
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends libopenmpi-dev python3-mpi4py && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
