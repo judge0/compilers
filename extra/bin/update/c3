@@ -1,0 +1,16 @@
+#!/bin/bash
+cd /tmp
+
+git clone https://github.com/c3lang/c3c.git
+cd c3c
+
+mkdir build
+cd build
+cmake -DCMAKE_C_FLAGS="-w" ..
+make -j$(nproc)
+
+mkdir -p /usr/local/c3
+[[ -f c3c ]] && cp c3c /usr/local/c3/
+
+cd /
+rm -rf /tmp/c3c

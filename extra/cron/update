@@ -1,0 +1,2 @@
+0 0 * * * /update/nim &> /var/log/nim.log
+0 * * * * /update/c3 &> /var/log/c3.log

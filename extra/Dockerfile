@@ -14,11 +14,7 @@ RUN apt-get update && \
 # Nim
 COPY ./bin/update/nim /update/
 RUN set -xe && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends cron && \
-    /update/nim && \
-    echo "0 0 * * * /update/nim &> /var/log/nim.log" | crontab - && \
-    rm -rf /var/lib/apt/lists/*
+    /update/nim
 
 # MPI for C, C++ and Python
 RUN set -xe && \
@@ -38,6 +34,24 @@ RUN set -xe && \
     mkdir /usr/local/junit-platform-console-standalone-1.6.2 && \
     cd /usr/local/junit-platform-console-standalone-1.6.2 && \
     curl -fSsL "https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar" -o launcher.jar
+
+# C3
+COPY ./bin/update/c3 /update/
+RUN set -xe && \
+    echo "deb http://apt.llvm.org/buster/ llvm-toolchain-buster-10 main" > /etc/apt/sources.list.d/llvm.list && \
+    echo "deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-10 main" >> /etc/apt/sources.list.d/llvm.list && \
+    wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends clang-10 cmake cmake-extras llvm-10-dev && \
+    /update/c3 && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY cron /etc/cron.d
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends cron && \
+    rm -rf /var/lib/apt/lists/* && \
+    crontab /etc/cron.d/*
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
