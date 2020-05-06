@@ -1,0 +1,137 @@
+#!/bin/bash
+set -e
+
+if [[ ! -f /.dockerenv ]]; then
+    echo "Tests should be run inside a Docker container. Use bin/run-tests script from the root of the project."
+    exit -1
+fi
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -l|--language)
+            PREFERRED_LANGUAGE="$2"
+            shift
+            shift
+        ;;
+        --isolate)
+            ISOLATE=true
+            shift
+        ;;
+        --skip-cleanup)
+            SKIP_CLEANUP=true
+            shift
+        ;;
+        *)
+            echo "Unknown option $key"
+            echo "Usage: ./run [--language <language>] [--isolate]"
+            exit -1
+        ;;
+    esac
+done
+
+readonly LANG_PROPERTIES_FILE=lang.properties
+readonly SKIP_FILE=.skip
+readonly SQLITE_DB=db.sqlite
+
+for directory in *; do
+    [[ ! -d $directory ]] && continue
+    [[ -f $directory/$SKIP_FILE ]] && continue
+
+    lang_properties=$directory/$LANG_PROPERTIES_FILE
+    [[ ! -f $lang_properties ]] && continue
+
+    [[ -v PREFERRED_LANGUAGE && $PREFERRED_LANGUAGE != $directory ]] && continue
+
+    source $lang_properties
+    for VERSION in $VERSIONS; do
+        source $lang_properties
+
+        echo "--- $NAME ---"
+        cd $directory
+
+        if [[ $ISOLATE == true ]]; then
+            echo "Initializing isolate box."
+
+            set +e
+            workdir="$(isolate --cg --init)"
+            isolate_exit=$?
+            set -e
+            if [[ $isolate_exit != 0 ]]; then
+                echo "Sandbox not cleaned. Cleaning now."
+                isolate --cg --cleanup
+                workdir="$(isolate --cg --init)"
+            fi
+
+            boxdir=$workdir/box
+            echo "Using box directory $boxdir"
+
+            cp $SOURCE_FILE $boxdir
+            [[ -f $SQLITE_DB ]] && cp $SQLITE_DB $boxdir
+
+            if [[ $COMPILE_CMD != "" ]]; then
+                if [[ $COMPILE_CMD_ISOLATE != "" ]]; then
+                    COMPILE_CMD=$COMPILE_CMD_ISOLATE
+                    unset COMPILE_CMD_ISOLATE
+                fi
+                echo $COMPILE_CMD > $boxdir/compile
+
+                echo "Compiling inside isolate."
+
+                set +e
+                isolate --cg -i /dev/null -t 15 -x 0 -w 20 -k 128000 -p120 --cg-timing --cg-mem=512000 -f 4096 \
+                        -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
+                        -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash compile
+
+                if [[ $? != 0 ]]; then
+                    if [[ $SKIP_CLEANUP != true ]]; then
+                        echo "Running isolate cleanup."
+                        isolate --cg --cleanup
+                        rm -rf $workdir || true
+                    else
+                        echo "Skipping cleanup after execution."
+                    fi
+                    exit -1
+                fi
+
+                set -e
+            fi
+
+            if [[ $RUN_CMD_ISOLATE != "" ]]; then
+                RUN_CMD=$RUN_CMD_ISOLATE
+                unset RUN_CMD_ISOLATE
+            fi
+            echo $RUN_CMD > $boxdir/run
+            echo "world" > $workdir/stdin
+
+            echo "Running inside isolate."
+
+            set +e
+            isolate --cg -t 2 -x 0.5 -w 5 -k 64000 -p60 --cg-timing --cg-mem=128000 -f 1024 \
+                    -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
+                    -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash run < $workdir/stdin
+
+            if [[ $? != 0 ]]; then
+                exit_after_cleanup=true
+            fi
+
+            if [[ $SKIP_CLEANUP != true ]]; then
+                echo "Running isolate cleanup."
+                isolate --cg --cleanup
+                rm -rf $workdir || true
+            else
+                echo "Skipping cleanup after execution."
+            fi
+            [[ $exit_after_cleanup == true ]] && exit -1
+
+            set -e
+        else
+            bash -c "$COMPILE_CMD"
+            echo "world" | bash -c "$RUN_CMD"
+            rm $(ls . | grep -v \.${SOURCE_FILE##*.} | grep -v $LANG_PROPERTIES_FILE | grep -v $SQLITE_DB) &> /dev/null || true
+        fi
+
+        cd ..
+        echo
+    done
+done
