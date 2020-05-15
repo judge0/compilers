@@ -80,7 +80,7 @@ for directory in *; do
 
                 set +e
                 isolate --cg -i /dev/null -t 15 -x 0 -w 20 -k 128000 -p120 --cg-timing --cg-mem=512000 -f 4096 \
-                        -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
+                        -E HOME=/tmp -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
                         -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash compile
 
                 if [[ $? != 0 ]]; then
@@ -108,7 +108,7 @@ for directory in *; do
 
             set +e
             isolate --cg -t 3 -x 1 -w 5 -k 64000 -p60 --cg-timing --cg-mem=128000 -f 1024 \
-                    -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
+                    -E HOME=/tmp -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
                     -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec --run -- /bin/bash run < $workdir/stdin
 
             if [[ $? != 0 ]]; then

@@ -513,6 +513,13 @@ RUN set -xe && \
     apt-get remove --purge -y maven && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
+# Check for latest version here: https://github.com/dotnet/sdk/releases
+RUN set -xe && \
+    curl -fSsL "https://download.visualstudio.microsoft.com/download/pr/7d4c708b-38db-48b2-8532-9fc8a3ab0e42/23229fd17482119822bd9261b3570d87/dotnet-sdk-3.1.202-linux-x64.tar.gz" -o /tmp/dotnet.tar.gz && \
+    mkdir /usr/local/dotnet-sdk && \
+    tar -xf /tmp/dotnet.tar.gz -C /usr/local/dotnet-sdk && \
+    rm -rf /tmp/*
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
@@ -527,7 +534,7 @@ RUN set -xe && \
     rm -rf /var/lib/apt/lists/* && \
     git clone https://github.com/judge0/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    git checkout c43acde2bde22b0f18ec5e3a0f3ebd66d96b0bee && \
+    git checkout 9be3ff6ff0670763e564912a6662730e55b69536 && \
     make -j$(nproc) install && \
     rm -rf /tmp/*
 ENV BOX_ROOT /var/local/lib/isolate
