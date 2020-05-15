@@ -43,8 +43,26 @@ RUN set -xe && \
     wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
     apt-get update && \
     apt-get install -y --no-install-recommends clang-10 cmake cmake-extras llvm-10-dev && \
+    ln -s /usr/bin/clang++-10 /usr/bin/clang++ && \
+    ln -s /usr/bin/clang-10 /usr/bin/clang && \
     /update/c3 && \
     rm -rf /var/lib/apt/lists/*
+
+COPY ./bin/update/bosque /update/
+ENV PATH "/usr/local/node/bin:$PATH"
+RUN set -xe && \
+    echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends g++-10 git-lfs && \
+    curl -fSsL https://nodejs.org/dist/v12.16.3/node-v12.16.3-linux-x64.tar.xz -o /tmp/node.tar.xz && \
+    mkdir /usr/local/node && \
+    tar -xf /tmp/node.tar.xz -C /usr/local/node --strip-components=1 && \
+    ln -fs /usr/local/node/bin/node /usr/bin/node && \
+    ln -fs /usr/local/node/bin/npm /usr/bin/npm && \
+    ln -fs /usr/local/node/bin/npx /usr/bin/npx && \
+    npm install -g typescript && \
+    /update/bosque && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 COPY cron /etc/cron.d
 RUN set -xe && \
@@ -57,4 +75,4 @@ COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.2.1-extra"
+LABEL version="1.3.0-extra"

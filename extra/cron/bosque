@@ -1,0 +1,1 @@
+0 * * * * /update/bosque &> /var/log/bosque.log

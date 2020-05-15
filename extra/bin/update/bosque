@@ -1,0 +1,20 @@
+#!/bin/bash
+cd /usr/local
+
+if [[ ! -d BosqueLanguage ]]; then
+    git clone https://github.com/microsoft/BosqueLanguage
+fi
+
+cd BosqueLanguage
+git pull origin master
+
+cd impl
+npm install
+npm run-script build
+
+cd /tmp
+wget http://minio.judge0.com/public/api/extra/main.bsq
+node /usr/local/BosqueLanguage/impl/bin/runtimes/exegen/exegen.js -c g++-10 main.bsq
+rm -rf /tmp/*
+
+chmod -R 777 /usr/local/BosqueLanguage/impl
