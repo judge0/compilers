@@ -520,6 +520,12 @@ RUN set -xe && \
     tar -xf /tmp/dotnet.tar.gz -C /usr/local/dotnet-sdk && \
     rm -rf /tmp/*
 
+# Check for latest version here: https://groovy.apache.org/download.html
+RUN set -xe && \
+    curl -fSsL "https://dl.bintray.com/groovy/maven/apache-groovy-binary-3.0.3.zip" -o /tmp/groovy.zip && \
+    unzip /tmp/groovy.zip -d /usr/local && \
+    rm -rf /tmp/*
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
