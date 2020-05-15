@@ -498,6 +498,21 @@ RUN set -xe && \
 
 # Support for Perl came "for free" since it is already installed.
 
+# Check for latest version here: https://github.com/clojure/clojure/releases
+ENV CLOJURE_VERSION 1.10.1
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends maven && \
+    cd /tmp && \
+    git clone https://github.com/clojure/clojure && \
+    cd clojure && \
+    git checkout clojure-$CLOJURE_VERSION && \
+    mvn -Plocal -Dmaven.test.skip=true package && \
+    mkdir /usr/local/clojure-$CLOJURE_VERSION && \
+    cp clojure.jar /usr/local/clojure-$CLOJURE_VERSION && \
+    apt-get remove --purge -y maven && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
@@ -518,4 +533,4 @@ RUN set -xe && \
 ENV BOX_ROOT /var/local/lib/isolate
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.2.1"
+LABEL version="1.3.0"
