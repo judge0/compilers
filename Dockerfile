@@ -496,6 +496,8 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+# Support for Perl came "for free" since it is already installed.
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
