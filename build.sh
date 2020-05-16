@@ -88,8 +88,6 @@ file="dist/$edition/Dockerfile"
 dockerfile=$dockerfile$(cat << EOF
 COPY $file /
 
-USER judge0
-
 LABEL version="$version"
 EOF
 )

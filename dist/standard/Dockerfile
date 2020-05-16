@@ -22,14 +22,6 @@ RUN set -xe && \
     apt-get autoremove --purge && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
-RUN set -xe && \ 
-    mkdir -p /cron /cron-log && \ 
-    cat /cron/* | crontab -
-
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
-
 COPY dist/standard/Dockerfile /
 
 LABEL version="2.0.0"
-LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"

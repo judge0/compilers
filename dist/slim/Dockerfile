@@ -76,6 +76,4 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 
 COPY dist/slim/Dockerfile /
 
-USER judge0
-
 LABEL version="2.0.0-slim"
