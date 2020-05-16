@@ -1,6 +1,3 @@
-ARG BASE_IMAGE
-FROM $BASE_IMAGE
-
 # Latest version: https://www.mono-project.com/download/stable
 ENV MONO_VERSIONS 6.8.0.123
 RUN set -xe && \

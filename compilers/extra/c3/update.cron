@@ -1,0 +1,1 @@
+0 * * * * /update/c3 &> /cron-log/c3.log

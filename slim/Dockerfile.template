@@ -7,10 +7,13 @@ RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
       cmake \
+      cmake-extras \
+      cron \
       curl \
       g++ \
       gcc \
       git \
+      git-lfs \
       libcap-dev \
       locales \
       make \

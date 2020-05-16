@@ -1,0 +1,13 @@
+# Latest version: https://github.com/c3lang/c3c
+ENV C3_VERSIONS latest
+COPY compilers/extra/c3/update.cron /cron/c3
+COPY compilers/extra/c3/update.sh /update/c3
+RUN set -xe && \
+    echo "deb http://apt.llvm.org/buster/ llvm-toolchain-buster-10 main" > /etc/apt/sources.list.d/llvm.list && \
+    echo "deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-10 main" >> /etc/apt/sources.list.d/llvm.list && \
+    wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends clang-10 llvm-10-dev && \
+    /update/c3 && \
+    apt-get autoremove --purge && \
+    rm -rf /tmp/* /var/lib/apt/lists/*

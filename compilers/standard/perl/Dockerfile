@@ -1,6 +1,3 @@
-ARG BASE_IMAGE
-FROM $BASE_IMAGE
-
 # Latest version: https://www.perl.org/get.html
 ENV PERL_VERSIONS 5.28.1
 RUN set -xe && \

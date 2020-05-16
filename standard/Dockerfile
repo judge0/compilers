@@ -1,4 +1,4 @@
-FROM judge0/api-base:2.0.0-base
+FROM base
 
 # Latest version: https://www.mono-project.com/download/stable
 ENV MONO_VERSIONS 6.8.0.123
@@ -20,7 +20,14 @@ RUN set -xe && \
     apt-get autoremove --purge && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
-COPY Dockerfile /
+RUN set -xe && \ 
+    mkdir -p /cron /cron-log && \ 
+    cat /cron/* | crontab -
 
-LABEL version="2.0.0"
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+COPY standard/Dockerfile /
+
+LABEL version="be688991"
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
