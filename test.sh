@@ -3,7 +3,7 @@ set -e
 
 if [[ ! -f /.dockerenv ]]; then
     echo "Creating a new container from image $1"
-    docker run -it --rm -v $PWD:/api-base -w /api-base $1 bash
+    docker run -it --privileged --rm -v $PWD:/api-base -w /api-base $1 bash
     exit 0
 fi
 
@@ -26,7 +26,7 @@ popd () {
 
 edition="standard"
 isolate=0
-cleanup=0
+cleanup=1
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --edition)
@@ -78,7 +78,9 @@ for dir in *; do
         pushd $lang
         for VERSION in $VERSIONS; do
             source $LANG_PROPERTIES_FILE
-            echo "--- $NAME ---"
+            echo "+-------------------------------------------------------------------------------"
+            echo "| $NAME "
+            echo "+-------------------------------------------------------------------------------"
 
             if [[ $isolate -eq 1 ]]; then
                 echo "Initializing isolate box."
@@ -161,6 +163,8 @@ for dir in *; do
                 echo "world" | bash -c "$RUN_CMD"
                 rm $(ls . | grep -v \.${SOURCE_FILE##*.} | grep -v $LANG_PROPERTIES_FILE | grep -v $SQLITE_DB) &> /dev/null || true
             fi
+
+            echo
         done
         popd
     done
