@@ -41,8 +41,11 @@ eval set -- "$PARAMS"
 
 COMPILERS_DIR="compilers"
 
+only_base=0
 if [[ "$compilers" == "all" ]]; then
     compilers="$(cd $COMPILERS_DIR; ls -d -- */)"
+elif [[ "$compilers" == "" ]]; then
+    only_base=1
 else
     compilers="${compilers//,/ }"
 fi
@@ -74,13 +77,25 @@ if [[ -z "$version" ]]; then
     version="$(git log -1 --format=%h --abbrev=8)"
 fi
 
-dockerfile="${dockerfile}COPY Dockerfile /\n\n"
+if [[ $only_base -eq 1 ]]; then
+    version="$version-base"
+fi
+
+file="Dockerfile"
+if [[ $only_base -eq 1 ]]; then
+    mkdir -p base
+    file="base/Dockerfile"
+fi
+
+dockerfile="${dockerfile}COPY $file /\n\n"
 dockerfile="${dockerfile}LABEL version=\"$version\"\n"
 dockerfile="${dockerfile}LABEL maintainer=\"Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>\""
 
-echo -e "$dockerfile" > Dockerfile
+echo -e "$dockerfile" > $file
 
-build_command="docker build -t judge0/api-base:$version ."
+image="judge0/api-base:$version"
+
+build_command="docker build -t $image -f $file ."
 echo "Generated new Dockerfile."
 echo
 echo "    $build_command"

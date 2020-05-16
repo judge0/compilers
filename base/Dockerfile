@@ -48,3 +48,8 @@ RUN set -xe && \
     done; \
     apt-get autoremove --purge && \
     rm -rf /tmp/* /var/lib/apt/lists/*
+
+COPY base/Dockerfile /
+
+LABEL version="2.0.0-base"
+LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
