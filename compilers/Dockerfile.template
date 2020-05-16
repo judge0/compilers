@@ -1,0 +1,9 @@
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+# Latest version: <URL TO QUICKLY CHECK FOR THE LATEST VERSION>
+ENV <COMPILER_NAME>_VERSIONS 1.0 2.0 3.0
+RUN set -xe && \
+    # INSTALLATION COMMANDS...
+    apt-get autoremove --purge && \
+    rm -rf /tmp/* /var/lib/apt/lists/*

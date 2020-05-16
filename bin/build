@@ -1,0 +1,91 @@
+#!/bin/bash
+set -e
+
+function get_argument() {
+    if [[ -n "$2" ]] && [[ ${2:0:1} != "-" ]]; then
+        echo "$2"
+    else
+        echo "Error: Argument for $1 is missing" >&2
+        exit 1
+    fi
+}
+
+PARAMS=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --build)
+            build=1
+            shift
+            ;;
+        --compilers)
+            compilers="$(get_argument $1 $2)"
+            shift 2
+            ;;
+        --version)
+            version="$(get_argument $1 $2)"
+            shift 2
+            ;;
+        -*|--*)
+            echo "Error: Unknown option $1" >&2
+            echo "Usage: $0 [--compilers <language>,...] base_image"
+            exit 1
+            ;;
+        *)
+            PARAMS="$PARAMS $1"
+            shift
+            ;;
+    esac
+done
+
+eval set -- "$PARAMS"
+
+COMPILERS_DIR="compilers"
+
+if [[ "$compilers" == "all" ]]; then
+    compilers="$(cd $COMPILERS_DIR; ls -d -- */)"
+else
+    compilers="${compilers//,/ }"
+fi
+
+for compiler in $compilers; do
+    dockerfiles="$dockerfiles $COMPILERS_DIR/$compiler/Dockerfile"
+done
+
+base_image="$1"
+if [[ -z "$base_image" ]]; then
+    dockerfiles="$COMPILERS_DIR/Dockerfile.base $dockerfiles"
+    dockerfile=""
+    skip_first=1
+else
+    dockerfile="FROM $base_image\n\n"
+    skip_first=0
+fi
+
+for f in $dockerfiles; do
+    content="$(cat $f | tail -n +4)"
+    if [[ $skip_first -eq 1 ]]; then
+        skip_first=0
+        content="$(cat $f)"
+    fi
+    dockerfile="$dockerfile$content\n\n"
+done
+
+if [[ -z "$version" ]]; then
+    version="$(git log -1 --format=%h --abbrev=8)"
+fi
+
+dockerfile="${dockerfile}COPY Dockerfile /\n\n"
+dockerfile="${dockerfile}LABEL version=\"$version\"\n"
+dockerfile="${dockerfile}LABEL maintainer=\"Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>\""
+
+echo -e "$dockerfile" > Dockerfile
+
+build_command="docker build -t judge0/api-base:$version ."
+echo "Generated new Dockerfile."
+echo
+echo "    $build_command"
+echo
+
+if [[ $build -eq 1 ]]; then
+    $build_command
+fi
