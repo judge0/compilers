@@ -1,0 +1,12 @@
+echo "Judge0 - The most advanced open-source online code execution system in the world."
+echo "© 2020 Herman Zvonimir Došilović"
+echo
+echo "       Version: ${JUDGE0_VERSION:-N/A}"
+echo "      Homepage: https://judge0.com"
+echo "     Changelog: https://github.com/judge0/api/blob/master/CHANGELOG.md"                              #"
+echo "   Source Code: https://github.com/judge0/api"
+echo " Documentation: https://api.judge0.com"
+echo "  Mailing List: https://subscribe.judge0.com"
+echo "   Bug Tracker: https://github.com/judge0/api/issues"
+echo "        Author: Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
+echo "       License: https://github.com/judge0/api/blob/master/LICENSE"

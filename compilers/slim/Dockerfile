@@ -19,6 +19,7 @@ RUN set -xe && \
       make \
       nodejs \
       npm \
+      sudo \
       tar \
       unzip \
       wget && \
@@ -28,7 +29,10 @@ RUN set -xe && \
     cd /tmp/isolate && \
     git checkout 9be3ff6ff0670763e564912a6662730e55b69536 && \
     make -j$(nproc) install && \
+    useradd -r judge0 -s /bin/bash && \
+    echo "judge0 ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers && \
     apt-get autoremove --purge && \
+    echo "[[ ! \$DOCKER_ENTRYPOINT -eq 1 ]] && source /.bashrc" >> /etc/bash.bashrc && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 ENV BOX_ROOT /var/local/lib/isolate
@@ -51,3 +55,19 @@ RUN set -xe && \
     done; \
     apt-get autoremove --purge && \
     rm -rf /tmp/* /var/lib/apt/lists/*
+ENV GEM_HOME "/opt/.gem"
+ENV PATH "/usr/local/ruby-2.7.0/bin:$GEM_HOME/bin:$PATH"
+
+ENV JUDGE0_HOMEPAGE "https://judge0.com"
+LABEL homepage=$JUDGE0_HOMEPAGE
+
+ENV JUDGE0_SOURCE_CODE "https://github.com/judge0"
+LABEL source_code=$JUDGE0_SOURCE_CODE
+
+ENV JUDGE0_MAINTAINER "Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
+LABEL maintainer=$JUDGE0_MAINTAINER
+
+COPY .bashrc /
+COPY docker-entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["docker-entrypoint.sh"]
