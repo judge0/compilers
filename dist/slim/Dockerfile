@@ -61,7 +61,7 @@ RUN set -xe && \
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-COPY slim/Dockerfile /
+COPY dist/slim/Dockerfile /
 
 LABEL version="2.0.0-slim"
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"

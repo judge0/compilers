@@ -4,6 +4,7 @@ set -e
 if [[ ! -f /.dockerenv ]]; then
     echo "Creating a new container from image $1"
     docker run -it --rm -v $PWD:/api-base -w /api-base $1 bash
+    exit 0
 fi
 
 function get_argument() {
