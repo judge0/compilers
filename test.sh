@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
         *)
             echo "Error: Unknown option $1" >&2
             echo "Usage: $0 [--edition edition] [--isolate] [--compiler compiler] [--skip-cleanup]"
-            shift
+            exit 1
             ;;
     esac
 done
@@ -128,7 +128,7 @@ for dir in *; do
                     set -e
                 fi
 
-                if [[ -z "$RUN_CMD_ISOLATE" ]]; then
+                if [[ ! -z "$RUN_CMD_ISOLATE" ]]; then
                     RUN_CMD=$RUN_CMD_ISOLATE
                     unset RUN_CMD_ISOLATE
                 fi
