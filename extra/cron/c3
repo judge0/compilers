@@ -1,1 +1,1 @@
-0 * * * * /update/c3 &> /var/log/c3.log
+0 * * * * bash -c "/update/c3 &> /var/log/c3.log"

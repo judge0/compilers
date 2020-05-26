@@ -1,4 +1,4 @@
-FROM judge0/api-base:1.2.1-slim
+FROM judge0/api-base:1.3.0-slim
 
 # Python for ML
 RUN apt-get update && \
@@ -43,16 +43,15 @@ RUN set -xe && \
     wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
     apt-get update && \
     apt-get install -y --no-install-recommends clang-10 cmake cmake-extras llvm-10-dev && \
-    ln -s /usr/bin/clang++-10 /usr/bin/clang++ && \
-    ln -s /usr/bin/clang-10 /usr/bin/clang && \
     /update/c3 && \
     rm -rf /var/lib/apt/lists/*
 
+# Bosque
 COPY ./bin/update/bosque /update/
 ENV PATH "/usr/local/node/bin:$PATH"
 RUN set -xe && \
-    echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list && \
-    apt-get update && \
+    echo "deb http://snapshot.debian.org/archive/debian/20200515T204659Z sid main" >> /etc/apt/sources.list && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
     apt-get install -y --no-install-recommends g++-10 git-lfs && \
     curl -fSsL https://nodejs.org/dist/v12.16.3/node-v12.16.3-linux-x64.tar.xz -o /tmp/node.tar.xz && \
     mkdir /usr/local/node && \
@@ -66,7 +65,7 @@ RUN set -xe && \
 
 COPY cron /etc/cron.d
 RUN set -xe && \
-    apt-get update && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
     apt-get install -y --no-install-recommends cron && \
     rm -rf /var/lib/apt/lists/* && \
     cat /etc/cron.d/* | crontab -

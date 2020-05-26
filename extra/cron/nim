@@ -1,1 +1,1 @@
-0 0 * * * /update/nim &> /var/log/nim.log
+0 0 * * * bash -c "/update/nim &> /var/log/nim.log"

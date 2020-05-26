@@ -6,15 +6,19 @@ if [[ ! -d BosqueLanguage ]]; then
 fi
 
 cd BosqueLanguage
+git checkout .
+git clean -fd
 git pull origin master
 
 cd impl
 npm install
 npm run-script build
 
-cd /tmp
-wget http://minio.judge0.com/public/api/extra/main.bsq
+tmpdir="$(mktemp -d)"
+cd $tmpdir
+wget https://minio.judge0.com/public/api/extra/main.bsq
 node /usr/local/BosqueLanguage/impl/bin/runtimes/exegen/exegen.js -c g++-10 main.bsq
-rm -rf /tmp/*
+cd /
+rm -rf $tmpdir
 
 chmod -R 777 /usr/local/BosqueLanguage/impl
