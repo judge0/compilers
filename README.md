@@ -6,7 +6,7 @@
 **Judge0 API Base** is an base Docker image with installed compilers, interpreters and [sandbox](https://github.com/ioi/isolate).
 
 ## Supported Languages
-
+### Standard Edition
 |#|Name|
 |:---:|:---:|
 |1|Assembly (NASM 2.14.02)|
@@ -55,6 +55,21 @@
 |44|Swift (5.2.3)|
 |45|TypeScript (3.7.4)|
 |46|Visual Basic<span>.</span>Net (vbnc 0.0.0.5943)|
+
+### Extra Edition
+|#|Name|
+|:---:|:---:|
+|1|Bosque (latest)|
+|2|C (Clang 10.0.1)|
+|3|C++ (Clang 10.0.1)|
+|4|C3 (latest)|
+|5|Java (OpenJDK 14.0.1)|
+|6|Java Test (OpenJDK 14.0.1, JUnit Platform Console Standalone 1.6.2)|
+|7|MPI (OpenRTE 3.1.3) with C (GCC 8.4.0)|
+|8|MPI (OpenRTE 3.1.3) with C++ (GCC 8.4.0)|
+|9|MPI (OpenRTE 3.1.3) with Python (3.7.7)|
+|10|Nim (stable)|
+|11|Python for ML (3.7.7)|
 
 ## Sandbox
 For sandbox we are using [isolate](https://github.com/ioi/isolate) (licensed under [GPL v2](https://github.com/ioi/isolate/blob/master/LICENSE)).
