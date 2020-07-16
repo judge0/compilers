@@ -63,6 +63,12 @@ RUN set -xe && \
     /update/bosque && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
+# Google Test
+RUN set -xe && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y --no-install-recommends libgtest-dev && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY cron /etc/cron.d
 RUN set -xe && \
     apt-get update -o Acquire::Check-Valid-Until=false && \
@@ -74,4 +80,4 @@ COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.3.0-extra"
+LABEL version="1.4.0-extra"
