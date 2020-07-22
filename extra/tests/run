@@ -79,7 +79,7 @@ for directory in *; do
                 echo "Compiling inside isolate."
 
                 set +e
-                isolate --cg -i /dev/null -t 15 -x 0 -w 20 -k 128000 -p120 --cg-timing --cg-mem=512000 -f 4096 \
+                isolate --cg -i /dev/null -t 15 -x 0 -w 20 -k 128000 -p120 --cg-timing --cg-mem=512000 -f 10240 \
                         -E HOME=$workdir -E PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  \
                         -E LANG -E LANGUAGE -E LC_ALL -d /etc:noexec -d /usr/local/BosqueLanguage/impl:rw --run -- /bin/bash compile
 
