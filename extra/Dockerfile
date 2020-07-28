@@ -69,6 +69,12 @@ RUN set -xe && \
     apt-get install -y --no-install-recommends libgtest-dev && \
     rm -rf /var/lib/apt/lists/*
 
+# Clang, Clang-Format and Clang-Tidy
+RUN set -xe && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y --no-install-recommends clang clang-tidy clang-format && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY cron /etc/cron.d
 RUN set -xe && \
     apt-get update -o Acquire::Check-Valid-Until=false && \
@@ -80,4 +86,4 @@ COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.4.0-extra"
+LABEL version="1.5.0-extra"
