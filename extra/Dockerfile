@@ -75,6 +75,31 @@ RUN set -xe && \
     apt-get install -y --no-install-recommends clang clang-tidy clang-format && \
     rm -rf /var/lib/apt/lists/*
 
+# .Net Core SDK
+ENV DOTNET_CLI_TELEMETRY_OPTOUT true
+RUN set -xe && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y apt-transport-https && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y dotnet-sdk-3.1 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Mono
+RUN set -xe && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y apt-transport-https dirmngr gnupg ca-certificates && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    echo "deb https://download.mono-project.com/repo/debian stable-buster main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y mono-complete mono-vbnc && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY init-files /init-files
+
 COPY cron /etc/cron.d
 RUN set -xe && \
     apt-get update -o Acquire::Check-Valid-Until=false && \
