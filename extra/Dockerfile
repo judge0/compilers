@@ -98,14 +98,17 @@ RUN set -xe && \
     apt-get install -y mono-complete mono-vbnc && \
     rm -rf /var/lib/apt/lists/*
 
-COPY init-files /init-files
-
+COPY files /files
 COPY cron /etc/cron.d
+
 RUN set -xe && \
     apt-get update -o Acquire::Check-Valid-Until=false && \
     apt-get install -y --no-install-recommends cron && \
     rm -rf /var/lib/apt/lists/* && \
-    cat /etc/cron.d/* | crontab -
+    cat /etc/cron.d/* | crontab - && \
+    dotnet restore --packages /NuGet/packages /files/nunit/Test.csproj && \
+    dotnet nuget locals all --clear && \
+    rm -rf /files/nunit/obj
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
