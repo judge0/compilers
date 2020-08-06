@@ -129,6 +129,26 @@ RUN set -xe && \
       rm -rf /tmp/*; \
     done
 
+#PascalABC
+ENV PABC_VERSIONS \
+      3.6.3
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends unzip && \
+    for VERSION in $PABC_VERSIONS; do \
+    	curl -fSsL "http://pascalabc.net/downloads/PABCNETC.zip" -o /tmp/pabc-$VERSION.zip && \
+      unzip -d /usr/local/pabc-$VERSION /tmp/pabc-$VERSION.zip && \
+      rm -rf /tmp/*; \
+    done
+
+RUN apt-get update && apt-get install -y apt-transport-https
+
+#Install mono-complete. Use this to add support for PascalABC (3.6.3)
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends mono-complete && \
+    ln -s /usr/lib/mono /usr/local/lib/mono
+
 # Check for latest version here: https://www.haskell.org/ghc/download.html
 ENV HASKELL_VERSIONS \
       8.8.1
