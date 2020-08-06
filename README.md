@@ -68,16 +68,24 @@ or [deploy](https://github.com/judge0/api/blob/master/CHANGELOG.md#deployment-pr
 |:---:|:---:|
 |1|Bosque (latest)|
 |2|C (Clang 10.0.1)|
-|3|C++ (Clang 10.0.1)|
-|4|C++ Test (GCC 8.4.0, Google Test 1.8.1)|
-|5|C3 (latest)|
-|6|Java (OpenJDK 14.0.1)|
-|7|Java Test (OpenJDK 14.0.1, JUnit Platform Console Standalone 1.6.2)|
-|8|MPI (OpenRTE 3.1.3) with C (GCC 8.4.0)|
-|9|MPI (OpenRTE 3.1.3) with C++ (GCC 8.4.0)|
-|10|MPI (OpenRTE 3.1.3) with Python (3.7.7)|
-|11|Nim (stable)|
-|12|Python for ML (3.7.7)|
+|3|C (Clang 9.0.1)|
+|4|C# (.NET Core SDK 3.1.302)|
+|5|C# (Mono 6.10.0.104)|
+|6|C# Test (.NET Core SDK 3.1.302, NUnit 3.12.0)|
+|7|C++ (Clang 10.0.1)|
+|8|C++ (Clang 9.0.1)|
+|9|C++ Test (Clang 10.0.1, Google Test 1.8.1)|
+|10|C++ Test (GCC 8.4.0, Google Test 1.8.1)|
+|11|C3 (latest)|
+|12|F# (.NET Core SDK 3.1.302)|
+|13|Java (OpenJDK 14.0.1)|
+|14|Java Test (OpenJDK 14.0.1, JUnit Platform Console Standalone 1.6.2)|
+|15|MPI (OpenRTE 3.1.3) with C (GCC 8.4.0)|
+|16|MPI (OpenRTE 3.1.3) with C++ (GCC 8.4.0)|
+|17|MPI (OpenRTE 3.1.3) with Python (3.7.7)|
+|18|Nim (stable)|
+|19|Python for ML (3.7.7)|
+|20|Visual Basic<span>.</span>Net (vbnc 0.0.0.5943)|
 
 ## Sandbox
 For sandbox we are using [isolate](https://github.com/ioi/isolate) (licensed under [GPL v2](https://github.com/ioi/isolate/blob/master/LICENSE)).
