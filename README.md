@@ -48,20 +48,21 @@ or [deploy](https://github.com/judge0/api/blob/master/CHANGELOG.md#deployment-pr
 |30|OCaml (4.09.0)|
 |31|Octave (5.1.0)|
 |32|Pascal (FPC 3.0.4)|
-|33|Perl (5.28.1)|
-|34|PHP (7.4.1)|
-|35|Plain Text|
-|36|Prolog (GNU Prolog 1.4.5)|
-|37|Python (2.7.17)|
-|38|Python (3.8.1)|
-|39|R (4.0.0)|
-|40|Ruby (2.7.0)|
-|41|Rust (1.40.0)|
-|42|Scala (2.13.2)|
-|43|SQL (SQLite 3.27.2)|
-|44|Swift (5.2.3)|
-|45|TypeScript (3.7.4)|
-|46|Visual Basic<span>.</span>Net (vbnc 0.0.0.5943)|
+|33|Pascal (ABC 3.6.3)|
+|34|Perl (5.28.1)|
+|35|PHP (7.4.1)|
+|36|Plain Text|
+|37|Prolog (GNU Prolog 1.4.5)|
+|38|Python (2.7.17)|
+|39|Python (3.8.1)|
+|40|R (4.0.0)|
+|41|Ruby (2.7.0)|
+|42|Rust (1.40.0)|
+|43|Scala (2.13.2)|
+|44|SQL (SQLite 3.27.2)|
+|45|Swift (5.2.3)|
+|46|TypeScript (3.7.4)|
+|47|Visual Basic<span>.</span>Net (vbnc 0.0.0.5943)|
 
 ### [Extra Edition](https://rapidapi.com/hermanzdosilovic/api/judge0-extra)
 |#|Name|
