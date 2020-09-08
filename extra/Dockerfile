@@ -1,4 +1,4 @@
-FROM judge0/api-base:1.3.0-slim
+FROM judge0/compilers:1.3.0-slim
 
 # Python for ML
 RUN apt-get update && \

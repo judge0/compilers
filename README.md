@@ -1,16 +1,16 @@
-# Judge0 API Base
+# Compilers
 <a href="https://www.producthunt.com/posts/judge0-ide" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=179885&theme=light" alt="" height="43px" /></a>
 <a href="https://patreon.com/hermanzdosilovic" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="" height="43px" /></a>
 <a href="https://paypal.me/hermanzdosilovic" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate with PayPal" height="43px" /></a>
 
 ## About
-**Judge0 API Base** is an base Docker image with installed compilers, interpreters and [sandbox](https://github.com/ioi/isolate).
+This is a Docker image with installed compilers, interpreters and [sandbox](https://github.com/ioi/isolate). It is used as a base image for [Judge0](https://github.com/judge0/judge0).
 
 ## Get Started
 <a href="https://rapidapi.com/hermanzdosilovic/api/judge0" target="_blank"><img src="https://storage.googleapis.com/code-snippets/connect-on-rapidapi-light.png" width="215px" alt="Connect on RapidAPI"></a>
 <span style="margin-left: 20px"></span>
 
-or [deploy](https://github.com/judge0/api/blob/master/CHANGELOG.md#deployment-procedure) on your server.
+or [deploy](https://github.com/judge0/judge0/blob/master/CHANGELOG.md#deployment-procedure) on your server.
 
 ## Supported Languages
 ### [Standard Edition](https://rapidapi.com/hermanzdosilovic/api/judge0)
