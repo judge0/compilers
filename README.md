@@ -240,15 +240,15 @@ Judge0 comes in two flavors: [Judge0](https://rapidapi.com/hermanzdosilovic/api/
 </tr>
 <tr>
 <td style="text-align:center">4</td>
-<td style="text-align:center">C# (.NET Core SDK 3.1.302)</td>
+<td style="text-align:center">C# (.NET Core SDK 3.1.406)</td>
 </tr>
 <tr>
 <td style="text-align:center">5</td>
-<td style="text-align:center">C# (Mono 6.10.0.104)</td>
+<td style="text-align:center">C# (Mono 6.12.0.122)</td>
 </tr>
 <tr>
 <td style="text-align:center">6</td>
-<td style="text-align:center">C# Test (.NET Core SDK 3.1.302, NUnit 3.12.0)</td>
+<td style="text-align:center">C# Test (.NET Core SDK 3.1.406, NUnit 3.12.0)</td>
 </tr>
 <tr>
 <td style="text-align:center">7</td>
@@ -272,7 +272,7 @@ Judge0 comes in two flavors: [Judge0](https://rapidapi.com/hermanzdosilovic/api/
 </tr>
 <tr>
 <td style="text-align:center">12</td>
-<td style="text-align:center">F# (.NET Core SDK 3.1.302)</td>
+<td style="text-align:center">F# (.NET Core SDK 3.1.406)</td>
 </tr>
 <tr>
 <td style="text-align:center">13</td>
