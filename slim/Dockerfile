@@ -39,10 +39,10 @@ RUN set -xe && \
     rm -rf /var/lib/apt/lists/* && \
     git clone https://github.com/judge0/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    git checkout 9be3ff6ff0670763e564912a6662730e55b69536 && \
+    git checkout ad39cc4d0fbb577fb545910095c9da5ef8fc9a1a && \
     make -j$(nproc) install && \
     rm -rf /tmp/*
 ENV BOX_ROOT /var/local/lib/isolate
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.3.0-slim"
+LABEL version="1.4.0-slim"

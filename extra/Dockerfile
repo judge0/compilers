@@ -1,4 +1,4 @@
-FROM judge0/compilers:1.3.0-slim
+FROM judge0/compilers:1.4.0-slim
 
 # Python for ML
 RUN apt-get update && \
@@ -114,4 +114,4 @@ COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.5.0-extra"
+LABEL version="1.6.0-extra"
