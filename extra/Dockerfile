@@ -8,6 +8,7 @@ RUN apt-get update && \
         numpy \
         pandas \
         scikit-learn \
+        pytest \
         scipy && \
     rm -rf /var/lib/apt/lists/*
 
