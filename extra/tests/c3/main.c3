@@ -1,9 +1,8 @@
 module main;
+import std::io;
 
-extern func void printf(char *str, ...);
-
-func int main()
+fn int main()
 {
-    printf("hello, world\n");
+    io::println("hello, world");
     return 0;
 }
