@@ -536,14 +536,24 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 RUN set -xe && \
     apt-get update && \
-    apt-get install -y --no-install-recommends git libcap-dev && \
+    apt-get install -y --no-install-recommends git libcap-dev libsystemd-dev pkg-config && \
     rm -rf /var/lib/apt/lists/* && \
-    git clone https://github.com/judge0/isolate.git /tmp/isolate && \
+    git clone https://github.com/ioi/isolate.git /tmp/isolate && \
     cd /tmp/isolate && \
-    git checkout ad39cc4d0fbb577fb545910095c9da5ef8fc9a1a && \
+    git checkout v2.2.1 && \
     make -j$(nproc) install && \
     rm -rf /tmp/*
 ENV BOX_ROOT /var/local/lib/isolate
 
+# Configure isolate for cgroup v2 with auto-detection
+RUN mkdir -p /usr/local/etc && \
+    echo '# Isolate configuration for Judge0' > /usr/local/etc/isolate && \
+    echo 'box_root = /var/local/lib/isolate' >> /usr/local/etc/isolate && \
+    echo 'lock_root = /run/isolate/locks' >> /usr/local/etc/isolate && \
+    echo 'cg_root = auto:/run/isolate/cgroup' >> /usr/local/etc/isolate && \
+    echo 'first_uid = 60000' >> /usr/local/etc/isolate && \
+    echo 'first_gid = 60000' >> /usr/local/etc/isolate && \
+    echo 'num_boxes = 1000' >> /usr/local/etc/isolate
+
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.4.0"
+LABEL version="1.4.0-cgroupv2"
