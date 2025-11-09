@@ -1,4 +1,4 @@
-FROM judge0/compilers:1.4.0-slim
+FROM judge0-compilers:1.4.1-slim-amd64
 
 # Python for ML
 RUN apt-get update && \
@@ -39,17 +39,17 @@ RUN set -xe && \
 # C3
 COPY ./bin/update/c3 /update/
 RUN set -xe && \
-    echo "deb http://apt.llvm.org/buster/ llvm-toolchain-buster-10 main" > /etc/apt/sources.list.d/llvm.list && \
-    echo "deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-10 main" >> /etc/apt/sources.list.d/llvm.list && \
+    echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-11 main" > /etc/apt/sources.list.d/llvm.list && \
+    echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-11 main" >> /etc/apt/sources.list.d/llvm.list && \
     wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
     apt-get update && \
-    apt-get install -y --no-install-recommends clang-10 cmake cmake-extras llvm-10-dev && \
+    apt-get install -y --no-install-recommends clang-11 cmake cmake-extras llvm-11-dev && \
     /update/c3 && \
     rm -rf /var/lib/apt/lists/*
 
 # Bosque
 COPY ./bin/update/bosque /update/
-ENV PATH "/usr/local/node/bin:$PATH"
+ENV PATH="/usr/local/node/bin:$PATH"
 RUN set -xe && \
     echo "deb http://snapshot.debian.org/archive/debian/20200515T204659Z sid main" >> /etc/apt/sources.list && \
     apt-get update -o Acquire::Check-Valid-Until=false && \
@@ -77,7 +77,7 @@ RUN set -xe && \
     rm -rf /var/lib/apt/lists/*
 
 # .Net Core SDK
-ENV DOTNET_CLI_TELEMETRY_OPTOUT true
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 RUN set -xe && \
     apt-get update -o Acquire::Check-Valid-Until=false && \
     wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
@@ -115,4 +115,4 @@ COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 LABEL maintainer="Herman Zvonimir Došilović <hermanz.dosilovic@gmail.com>"
-LABEL version="1.6.0-extra"
+LABEL version="1.6.1-extra"

@@ -1,5 +1,5 @@
 #!/bin/bash
-[[ ! -v IMAGE ]] && IMAGE=judge0/compilers:latest
+[[ ! -v IMAGE ]] && IMAGE=judge0-compilers:1.4.1-amd64
 cd tests
 echo "Opening shell for debugging inside Docker container of image $IMAGE"
 docker run -it --rm -v $PWD:/tests -w /tests --privileged $IMAGE bash
