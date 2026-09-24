@@ -526,6 +526,37 @@ RUN set -xe && \
     unzip /tmp/groovy.zip -d /usr/local && \
     rm -rf /tmp/*
 
+# Salam's release binary needs glibc >= 2.38, newer than this image's glibc 2.28,
+# so we bundle a newer glibc, libgcc and libtinfo next to it and run it through
+# their loader directly instead of the system one. Versions pinned via
+# snapshot.debian.org for reproducibility.
+RUN set -xe && \
+    mkdir -p /usr/local/salam-glibc /tmp/salam-glibc && \
+    cd /tmp/salam-glibc && \
+    curl -fSsL "https://snapshot.debian.org/archive/debian/20260711T202405Z/pool/main/g/glibc/libc6_2.41-12+deb13u4_amd64.deb" -o libc6.deb && \
+    echo "967aa62605721081c3eb2a17650611a792aa802d76a6511d1840242623d204c9  libc6.deb" | sha256sum -c - && \
+    curl -fSsL "https://snapshot.debian.org/archive/debian/20250315T204837Z/pool/main/g/gcc-14/libgcc-s1_14.2.0-19_amd64.deb" -o libgcc-s1.deb && \
+    echo "3c71917b490d1a17aed43196a2787a256ecf060526cdb20216a74bedc061b150  libgcc-s1.deb" | sha256sum -c - && \
+    curl -fSsL "https://snapshot.debian.org/archive/debian/20250306T211336Z/pool/main/n/ncurses/libtinfo6_6.5+20250216-2_amd64.deb" -o libtinfo6.deb && \
+    echo "8b9f6a7983e9418564e48a627518de4c03917b56efe68d7f3e93bd8fffa1cc10  libtinfo6.deb" | sha256sum -c - && \
+    for pkg in libc6 libgcc-s1 libtinfo6; do \
+      ar x $pkg.deb data.tar.xz && \
+      tar -xJf data.tar.xz -C /usr/local/salam-glibc --strip-components=4 --wildcards "./usr/lib/x86_64-linux-gnu/*.so*" && \
+      rm -f data.tar.xz control.tar.xz debian-binary; \
+    done && \
+    rm -rf /tmp/salam-glibc
+
+# Check for latest version here: https://github.com/SalamLang/Salam/releases
+ENV SALAM_VERSIONS \
+      0.4.3
+RUN set -xe && \
+    for VERSION in $SALAM_VERSIONS; do \
+      curl -fSsL "https://github.com/SalamLang/Salam/releases/download/v$VERSION/salam-$VERSION-linux-x86_64.tar.gz" -o /tmp/salam-$VERSION.tar.gz && \
+      mkdir /usr/local/salam-$VERSION && \
+      tar -xf /tmp/salam-$VERSION.tar.gz -C /usr/local/salam-$VERSION --strip-components=1 && \
+      rm -rf /tmp/*; \
+    done
+
 RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends locales && \
