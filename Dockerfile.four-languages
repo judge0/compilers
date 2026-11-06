@@ -1,0 +1,89 @@
+# Lightweight 4-Language Base Image for Judge0 (C, C++, Java, Python)
+# Base: Debian 12 (Bookworm) - The official modern successor to Judge0's original Debian 10 Buster base.
+# Does NOT require host-level AppArmor sysctl modifications.
+# Toolchains:
+# - C (GCC 12)
+# - C++ (G++ 12 with full C++20 standard support)
+# - Java (OpenJDK 21 LTS via Eclipse Temurin)
+# - Python (Python 3.11 with numpy)
+# - Isolate (Sandbox with cgroups support)
+# - Ruby 3.1 & Node.js (for Judge0 Server and Worker)
+
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+# 1. Install base utilities and dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      gnupg \
+      git \
+      make \
+      pkg-config \
+      libcap-dev \
+      sudo \
+      cron \
+      locales \
+      unzip \
+      zip \
+      libpq-dev \
+      shared-mime-info && \
+    rm -rf /var/lib/apt/lists/*
+
+# 2. Install modern C & C++ (GCC 12 / G++ 12 with C++20 support)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      gcc \
+      g++ \
+      libc6-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# 3. Install Java 21 LTS (Eclipse Temurin / Adoptium)
+RUN mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main" > /etc/apt/sources.list.d/adoptium.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends temurin-21-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME="/usr/lib/jvm/temurin-21-jdk-amd64"
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
+# 4. Install Python 3 (Debian 12 Bookworm Python 3.11) + numpy
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      python3 \
+      python3-pip \
+      python3-dev \
+      python3-setuptools \
+      python3-wheel \
+      python3-numpy && \
+    rm -rf /var/lib/apt/lists/* && \
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+# 5. Install Ruby 3.1 & Node.js (Required by Judge0 backend & aglio docs)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      ruby \
+      ruby-dev \
+      nodejs \
+      npm && \
+    rm -rf /var/lib/apt/lists/* && \
+    gem install bundler -v 2.4.22 --no-document
+
+# 6. Install Isolate Sandbox (compiled with libcap)
+RUN git clone https://github.com/judge0/isolate.git /tmp/isolate && \
+    cd /tmp/isolate && \
+    make -j$(nproc) install && \
+    rm -rf /tmp/isolate
+
+ENV BOX_ROOT=/var/local/lib/isolate
+
+LABEL maintainer="Custom Judge0 4-Language Edition"
+LABEL version="2.0.0-lean"
+LABEL base="debian-12-bookworm"
+LABEL languages="c-12,cpp-12,java-21,python-3.11"
